@@ -1,0 +1,306 @@
+@font-face {
+    font-family: Futura-Book;
+    src: url('../../assets/fonts/00288-SFUFUTURABOOK.TTF');
+}
+
+#notice{
+    border-left: 2px solid #6c6c6c;
+    padding-left: 5px;
+    margin: 10px 0;
+    font-size: 1em;
+}
+
+.body-container {
+    height: 100%;
+    position: relative;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.profile-head{
+    height: 439px;
+    background-color: white;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15) ;
+}
+
+.cover {
+    background-image: url('../../assets/picture-banner/service-banner.png');
+    background-size: cover;
+    height: 70%;
+    position: relative;
+}
+
+.avatarTop {
+    background-image: url('../../assets/picture-banner/question.png');
+    background-size: cover;
+    border-radius: 5%;
+    height: 178px;
+    width: 178px;
+    border: 1px solid #e5e5e5;
+    position: relative;
+}
+
+.transparent-camera{
+    position: absolute;
+    bottom: 0;
+    height: 52px;
+    width: 178px;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    opacity: 0.8;
+}
+
+#camera-icon{
+    margin: 0 auto;
+    height: 50px;
+    width: 50px;
+}
+
+#change-image{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 1.2em;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 5%;
+    padding-right: 1.2em;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2em;
+    top: -90px;
+    left: 1.4em;
+    position: relative;
+}
+
+.employer-seen-info{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    margin-bottom: 15px;
+    padding-right: 10px;
+    background-color: #f2f7ff;
+    box-sizing: border-box;
+    height: auto;
+    width: 855px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+#employer-seen-name{
+    margin-bottom: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+#company-name{
+    margin-top: 8px;
+    font-weight: 500;
+    font-size: 1.2em;
+}
+
+#day-viewed{
+    position: absolute;
+    right:0;
+    top:0;
+    margin-right: 1.4em;
+    margin-top: 1.2em;
+    font-weight: 500;
+    font-family: Futura-Book;
+}
+
+.info-employee-wrapper{
+    display: flex;
+    margin-left: 1.4em;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#employer-seen-name{
+    color: #0c62ad;
+    font-weight: bold;
+}
+
+#tick{
+    width: 1.2em;
+    height: 1.2em;
+    border: 1px solid #0c62ad;
+    border-radius: 100%;
+    
+}
+
+.name-viewer-wrapper {
+    display: flex;
+    margin-left: 1.4em;
+    flex-direction: column;
+    justify-content: center;
+    align-self: flex-end;
+}
+
+.name {
+    font-size: 1.4em;
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+.viewer-info {
+    display: flex;
+    align-items: center;
+}
+
+.viewer-icon {
+    margin-right: 5px;
+    width: 1.6em;
+    height: 1.6em;
+    background-image: url('../../assets/icons/eye-icon.png');
+    background-size: cover;
+}
+
+.viewer-count {
+    font-size: 1em;
+    color: black;
+}
+
+.content-wrapper{
+    margin-bottom: 1.8em;
+    /* display: block; */
+    box-shadow: none;
+}
+
+.info-area{
+    position: relative;
+    padding-left: 1.4em;
+    box-sizing: border-box;
+    padding-top: 10px;
+    padding-right: 1.4em;
+    padding-bottom: 1.6em;
+    height: fit-content;
+    background-color: white;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15) ;
+}
+
+#employer-seen{
+    margin-top: 1.4em;
+}
+
+.area-title{
+    border-left: 5px solid #0c62ad;
+    padding-left: 7px;
+    font-weight: 600;
+    font-size: 1.2em;
+    color: #414042 !important;
+    margin-bottom: 1.2em;
+    margin-top: 5px;
+}
+
+.left-side-content{
+    max-width: 69%;
+}
+
+.content-parent{
+    position: relative;
+    margin-top: 1.2em;
+}
+
+.edit-button{
+    position: absolute;
+    top:0;
+    right:0;
+    margin-right: 10px;
+    margin-top: 10px;
+    width: 1.6em;
+    height: 1.6em;
+    background-size: cover;
+    background-image: url('../../assets/icons/edit-icon.png');
+}
+
+#location-ping{
+    width: 1.2em;
+    height: 1.2em;
+}
+
+.right-side-content{
+    width: 29%;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+#employer-logo{
+    width: 15%;
+    height: auto;
+    margin-left: 0px;
+    cursor: pointer;
+}
+
+#achivement-area{
+    margin-top: 1.4em;
+}
+
+#achive-icon{
+    width: 2em;
+    height: 2em;
+}
+
+.achive-item{
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.achive-name{
+    margin-left: 15px;
+}
+
+#achive-more{
+    width: 1.6em;
+    height: 1.6em;
+    right:0;
+    position: absolute;
+}
+
+#activity-name{
+    font-weight: 500;
+}
+
+#clock-icon{
+    margin-left: 10px;
+    width: 1.6em;
+    height: 1.6em;
+}
+
+#activities-area{
+    margin-top: 1.4em;
+}
+
+.title-include-add{
+    display: flex;
+    align-items: flex-start;
+}
+
+#add-button{
+    width: 2em;
+    height: 2em;
+    margin-left: 1.2em;
+}
+
+.background-grey-profile {
+    min-height: 1200px;
+}
+
+.area-content {
+    font-size: 1em;
+    color: #414042;
+    font-family: Arial, Helvetica, sans-serif;
+}

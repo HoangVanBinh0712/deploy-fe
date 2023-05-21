@@ -1,0 +1,12 @@
+.chart-frame-statitics {
+    background-color: #efefef;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 1350px;
+    display: flex;
+    justify-content: center;
+}
+
+.gr-chart {
+    width: 100%;
+}

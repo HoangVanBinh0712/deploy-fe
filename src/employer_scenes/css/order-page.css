@@ -1,0 +1,79 @@
+.row-data-single-item {
+    font-family: Roboto-Light !important;
+    color: #6c6c6c;
+    font-size: 1em;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    padding: 1.4em;
+    height: 180px;
+    margin-bottom: 1.2em;
+}
+
+.time-and-state-oder {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1.2em;
+}
+
+.create-time-order {
+    display: flex;
+    align-items: center;
+    color: black;
+    font-weight: 500;
+}
+
+.create-time-order p {
+    margin: 0 5px !important;
+    font-size: 1.2em;
+    color: #0c62ad;
+}
+
+.state-order-paid-wait {
+    color: #0c62ad;
+}
+
+.pay-order-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    border: 1px solid #0c62ad;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.col-item-data-order-title {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    background-color: #e7e7e7;
+    color: black;
+    font-weight: 600;
+}
+
+.col-item-data-order-title .title-item {
+    display: flex;
+    justify-content: center;
+}
+
+.col-item-data-order-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    color: black;
+}
+
+.col-item-data-order-content .title-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upper-letter {
+    text-transform: uppercase;
+}
+
+.view-more-ser p {
+    font-size: 1.4em;
+    color: #0c62ad;
+    cursor: pointer;
+}

@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap");
+
+html,
+body,
+#root,
+.app,
+.content {
+  height: 100%;
+  width: 100%;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.app {
+  display: flex;
+  position: relative;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.blogListDelete{
+  color: #6c6c6c;
+  cursor: pointer;
+}
+.serListDelete{
+  color: #6c6c6c;
+  cursor: pointer;
+}
+.userListDelete{
+  color: #6c6c6c;
+  cursor: pointer;
+}
+
+.landing {
+	position: relative;
+	background: url('../public/assets/landing.jpg') no-repeat center center/cover;
+	height: 100vh;
+}
+
+.dark-overlay {
+	background-color: rgba(0, 0, 0, 0.5);
+	height: 100%;
+}
+
+.landing-inner {
+	height: 100%;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.landing-inner form {
+	width: 30%;
+}
+
+.landing-inner h1,
+.landing-inner h4,
+.landing-inner p {
+	color: white;
+}

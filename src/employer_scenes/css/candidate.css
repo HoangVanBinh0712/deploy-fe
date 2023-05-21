@@ -1,0 +1,42 @@
+.form-candidate-profile {
+    width: 100%;
+    height: 100%;
+    padding: 5% 20% 5%;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+}
+
+.form-info-candidate-control {
+    background-color: #fff;
+    padding: 1.2em;
+    border-radius: 5px;
+    /* min-height: 680px; */
+}
+
+.name-candidate {
+    color: #6c6c6c;
+    padding-left: 1.2em;
+    font-size: 1.2em;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #cfcfcf;
+    width: 50%;
+}
+
+.exp-area {
+    font-size: 1.2em;
+    color: #6c6c6c;
+    padding-left: 1.2em;
+    padding-top: 10px;
+    min-height: 120px;
+}
+
+.bs-info {
+    display: flex;
+}

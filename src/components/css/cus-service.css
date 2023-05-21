@@ -1,0 +1,39 @@
+.title-Service{
+    font-weight: bold;
+    text-align:center;
+    font-size: 1em !important;
+    color: #000;
+}
+.content-Service{
+    font-size:1em;
+}
+.free-space-ser {
+    width: 80%;
+    margin-left: 10%;
+    font-size: 1.2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.icon-fb{
+    text-decoration: none;
+    color:black;
+}
+.fb-title{
+    padding-left: 100px;
+}
+.gr-social{
+    display:inline-flex;
+    justify-content: center;
+    width: 100%;
+    gap: 200px;
+}
+.icon-ig{
+    text-decoration: none;
+    color:black;
+}
+
+.contact-ser {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
