@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import "../../employee_scenes/css/Homepage.css";
 import { useContext, useState } from 'react';
 import banner1 from "../../assets/img/banner-home.png"

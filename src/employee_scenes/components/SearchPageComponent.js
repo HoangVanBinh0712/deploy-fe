@@ -347,7 +347,7 @@ const SearchPageComponent = () => {
                         <select className="search-select option-select-page-search" onChange={onChangeSelectIndustry}>
                             <option value="" selected={selectIndustry === ''}>All industries</option>
                             {industries.map((i) => (
-                                <option key={i.id} value={i.id} selected={selectIndustry == i.id}>
+                                <option key={i.id} value={i.id} selected={selectIndustry === i.id}>
                                     {i.name}
                                 </option>
                             ))}
@@ -355,7 +355,7 @@ const SearchPageComponent = () => {
                         <select className="search-select option-select-page-search" onChange={onChangeInputCity}>
                             <option value="" selected={inputCity === ''}>All areas</option>
                             {cities.map((c) => (
-                                <option key={c.id} value={c.id} selected={inputCity == c.id}>
+                                <option key={c.id} value={c.id} selected={inputCity === c.id}>
                                     {c.name}
                                 </option>
                             ))}

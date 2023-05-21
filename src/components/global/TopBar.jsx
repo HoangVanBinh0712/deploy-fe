@@ -1,6 +1,5 @@
-import React from 'react'
 import { useState, useContext, useRef, useEffect } from "react";
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AuthContext } from "../../contexts/AuthContext";
 import "../../employee_scenes/css/Homepage.css"
 import logoBHQ from "../../assets/img/logo.png"

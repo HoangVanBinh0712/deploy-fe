@@ -1,10 +1,8 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 
 import HomePage from "../employee_scenes/HomePage";
-import HomePageEmp from "../employer_scenes/HomePageEmp";
 import PageNotFound from "../components/page/notfound/PageNotFound";
-import { webUrlActivity } from "../contexts/Constants";
 import EmployeeAccountPage from "../employee_scenes/EmployeeAccountPage";
 import PersonalInfoComponent from "../employee_scenes/components/PersionalInfoComponent";
 import UserAchievement from "../employee_scenes/components/AchievementComponent";

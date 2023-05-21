@@ -298,7 +298,7 @@ const PostDetails = () => {
     }
 
     const checkFollow = (id, arr) => {
-        const index = arr.findIndex(post => post.id == id);
+        const index = arr.findIndex(post => post.id === id);
         if (index !== -1) return true
         else return false
     }
