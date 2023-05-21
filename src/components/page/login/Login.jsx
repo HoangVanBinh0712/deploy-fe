@@ -85,7 +85,7 @@ const Login = () => {
         }
         setAuthLoading(true);
     }
-
+    console.log(process.env);
     let body
     if (!authloading && role === "ROLE_USER") {
         body = (<Navigate to="/home" />)
