@@ -1,19 +1,19 @@
 import React from 'react'
 import { useState, useContext } from 'react'
-import { Navigate, Link } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import './login.css'
 import logoBHQ from '../../../assets/img/logo.png'
 import pt3Login from '../../../assets/img/cv-picture3.png'
 import ggIcon from "../../../assets/img/gg.png"
 import { AuthContext } from '../../../contexts/AuthContext'
-import { useToast } from "../../../contexts/Toast";
-import axios from 'axios'
+import swal from 'sweetalert';
 
 const Login = () => {
 
     const { authState: { authloading, role }, loginUser } = useContext(AuthContext)
     const [waitLogin, setAuthLoading] = useState(true);
-    const { warn, error, success } = useToast();
+    const [formLogin, setFormLogin] = useState({ email: '', password: '' })
+    const [formErrors, setFormErrors] = useState({});
 
 
     const [showPassword, setShowPassword] = useState(false);
@@ -21,12 +21,10 @@ const Login = () => {
         setShowPassword(!showPassword);
     };
 
-    const [email, setEmail] = useState('');
-    const onChangeEmail = (event) => setEmail(event.target.value)
-
-    const [pwd, setPwd] = useState('');
-    const onChangePwd = (event) => setPwd(event.target.value)
-
+    const { email, password } = formLogin
+    const onFormLoginChange = (e) => {
+        setFormLogin({ ...formLogin, [e.target.name]: e.target.value })
+    }
     const [checkEMP, setCreateEMP] = useState(false);
     const [checkUser, setCreateUser] = useState(true);
 
@@ -47,6 +45,22 @@ const Login = () => {
     const [mess, setMess] = useState('');
 
 
+    const validate = (formLogin) => {
+        const errors = {};
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+        if (!formLogin.email) {
+            errors.email = "Email is required!";
+        } else if (!regex.test(formLogin.email)) {
+            errors.email = "This is not a valid email format !";
+        }
+        if (!formLogin.password) {
+            errors.password = "Password is required"
+        } else if (formLogin.password?.length <= 6)
+            errors.password = "Password must at least 6 characters !"
+        return errors;
+    };
+
+
     /* const loginGG =() =>{
         const response= axios.post("https://career-website.herokuapp.com/oauth2/authorization/google",{
             headers: {
@@ -60,32 +74,31 @@ const Login = () => {
     const onClickLoginBtn = async (event) => {
         setAuthLoading(false);
         event.preventDefault();
-        if (email.length === 0 || pwd.length === 0) {
-            setMess("*Required...")
-            setTimeout(() => {
-                setMess("")
-            }, 5000)
-        }
-        else {
+        const err = validate(formLogin)
+        if (Object.keys(err).length > 0) {
+            setFormErrors(err);
+        } else {
             try {
-                const userLoginForm = {
-                    username: email,
-                    password: pwd
-                }
                 let isEmpAccount = ''
                 if (checkEMP) isEmpAccount = "ROLE_EMPLOYER"
                 else isEmpAccount = "ROLE_USER"
-                const userLoginData = await loginUser(userLoginForm, isEmpAccount);
+                const userLoginData = await loginUser({username: formLogin.email, password: formLogin.password}, isEmpAccount);
                 if (userLoginData.success === false) {
-                    warn(userLoginData.message)
+                    swal({
+                        title: 'Error',
+                        icon: 'error',
+                        text: userLoginData.message,
+                        dangerMode: true
+                    })
                 }
             } catch (error) {
                 console.log(error);
             }
+
         }
+
         setAuthLoading(true);
     }
-    console.log(process.env);
     let body
     if (!authloading && role === "ROLE_USER") {
         body = (<Navigate to="/home" />)
@@ -117,17 +130,19 @@ const Login = () => {
                                 </p>
                             </div>
                             <div >
-                                <label className="lb-name" for="email" style={{ color: "#207198" }}>Email</label>
+                                <label className="lb-name" for="email" style={{ color: "#207198" }}>Email </label>
                                 <input className="input-text-login"
                                     type="email"
                                     id="email"
                                     name="email"
                                     value={email}
                                     placeholder={mess}
-                                    onChange={onChangeEmail}
+                                    onChange={onFormLoginChange}
                                     style={{ fontSize: '20px' }}
                                     required
                                 />
+                                <label className="lb-name" for="email" style={{ color: "red", fontSize: "0.8em" }}>{formErrors?.email} </label>
+
                             </div>
                             <div >
                                 <label className="lb-name" for="password" style={{ color: "#207198" }}>Password</label>
@@ -135,12 +150,12 @@ const Login = () => {
                                     <div style={{ width: '92%' }}>
                                         <input className="input-text-login password"
                                             type={showPassword ? "text" : "password"}
-                                            id="pswrd"
-                                            name="pwd"
-                                            value={pwd}
+                                            id="password"
+                                            name="password"
+                                            value={password}
                                             placeholder={mess}
                                             style={{ margin: "0", border: 'none', height: '56px', fontSize: '20px' }}
-                                            onChange={onChangePwd}
+                                            onChange={onFormLoginChange}
                                             required
                                         />
                                     </div>
@@ -148,6 +163,7 @@ const Login = () => {
                                         <i className="fa fa-eye" onClick={onClick} ></i>
                                     </div>
                                 </div>
+                                <label className="lb-name" for="password" style={{ color: "red", fontSize: "0.8em" }}>{formErrors?.password} </label>
 
                             </div>
                             <div className="flex-sb-m w-full p-t-3 p-b-32">

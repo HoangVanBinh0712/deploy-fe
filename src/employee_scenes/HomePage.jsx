@@ -17,7 +17,7 @@ const HomePage = () => {
 
   return (
     <>
-      {/* {!authloading && user && <ChatBox />} */}
+      {!authloading && user && <ChatBox />}
 
       <TopBar />
       <Banner />
