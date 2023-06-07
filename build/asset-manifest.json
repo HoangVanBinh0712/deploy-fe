@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.css": "/static/css/main.d63dd7e8.css",
-    "main.js": "/static/js/main.50a22753.js",
+    "main.css": "/static/css/main.cce6b117.css",
+    "main.js": "/static/js/main.0164a724.js",
     "static/media/landing.jpg": "/static/media/landing.ec20988331962deb4ee1.jpg",
     "static/media/banner-home-or.png": "/static/media/banner-home-or.b6fd3d64c40744e8f49d.png",
     "static/media/banner-home.png": "/static/media/banner-home.d2f1b6a03bcf90717eb3.png",
     "static/media/banner-home-or2.png": "/static/media/banner-home-or2.7f91e714ca4125b2e2a2.png",
-    "static/media/service-banner.png": "/static/media/service-banner.f08b9938dc375fa5c2fd.png",
+    "static/media/service-banner.png": "/static/media/service-banner.bcc899bb1c1e9a43ed64.png",
     "static/media/emp-banner.png": "/static/media/emp-banner.f94584aee5e562a0e0d0.png",
     "static/media/cv-picture3.png": "/static/media/cv-picture3.bd5e87a74d48ab6462a5.png",
     "static/media/Montserrat-Regular.ttf": "/static/media/Montserrat-Regular.2a2d37bf7680d86811db.ttf",
@@ -16,7 +16,6 @@
     "static/media/Roboto-Regular.ttf": "/static/media/Roboto-Regular.fc2b5060f7accec5cf74.ttf",
     "static/media/Roboto-Bold.ttf": "/static/media/Roboto-Bold.f80816a5455d171f948d.ttf",
     "static/media/Roboto-Light.ttf": "/static/media/Roboto-Light.333da16a3f3cc391d087.ttf",
-    "static/media/earth-icon.png": "/static/media/earth-icon.c065236e8f1b06d84be8.png",
     "static/media/update-cv.png": "/static/media/update-cv.6b1e43bb659e5630cb01.png",
     "static/media/Poppins-Regular.ttf": "/static/media/Poppins-Regular.1c701c9a6b587802e3d0.ttf",
     "static/media/banner-search.png": "/static/media/banner-search.68658cb33dc228a3ab80.png",
@@ -30,12 +29,14 @@
     "static/media/question.png": "/static/media/question.cf8a0b8b062a8519f197.png",
     "static/media/SFUFUTURAHEAVY.TTF": "/static/media/SFUFUTURAHEAVY.f9d932d7e07a9e1fabfe.TTF",
     "static/media/check-icon.png": "/static/media/check-icon.e2c6cfb7bd807983cba6.png",
+    "static/media/banner-highlight.jpg": "/static/media/banner-highlight.037c5240222e49e7c0d5.jpg",
     "static/media/messenger-icon.png": "/static/media/messenger-icon.830c9a2481fafe80108c.png",
     "static/media/check-service-icon.png": "/static/media/check-service-icon.7b13b6dd1ec0a2b60004.png",
     "static/media/logo.png": "/static/media/logo.432e00967a5d8cc6ffbc.png",
     "static/media/gender-icon.png": "/static/media/gender-icon.ef98d918231b27bedb3a.png",
     "static/media/customer-support-icon.png": "/static/media/customer-support-icon.88577aeedd62791a762e.png",
     "static/media/gg.png": "/static/media/gg.9db27c1011edb821b59c.png",
+    "static/media/logo-company.png": "/static/media/logo-company.e731be641d91385953c2.png",
     "static/media/search-employee-icon.png": "/static/media/search-employee-icon.e76099b48c7eeb917ca5.png",
     "static/media/apply-icon.png": "/static/media/apply-icon.1ca41c53e7645c5e58de.png",
     "static/media/user.png": "/static/media/user.7bade37884575d9a4552.png",
@@ -43,11 +44,11 @@
     "static/media/tma-logo.png": "/static/media/tma-logo.f946887a94eec1bb8fbb.png",
     "static/media/camera.png": "/static/media/camera.e9f49d4bf70315fb4104.png",
     "index.html": "/index.html",
-    "main.d63dd7e8.css.map": "/static/css/main.d63dd7e8.css.map",
-    "main.50a22753.js.map": "/static/js/main.50a22753.js.map"
+    "main.cce6b117.css.map": "/static/css/main.cce6b117.css.map",
+    "main.0164a724.js.map": "/static/js/main.0164a724.js.map"
   },
   "entrypoints": [
-    "static/css/main.d63dd7e8.css",
-    "static/js/main.50a22753.js"
+    "static/css/main.cce6b117.css",
+    "static/js/main.0164a724.js"
   ]
 }

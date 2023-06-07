@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import logoPost from "../../assets/icons/logo.png";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const SingleCandidateProfile = ({ data, openClick }) => {
+
+  const { viewProfileJSK } = useContext(AuthContext)
   const initCandidate = {
     url: "",
     name: "",
@@ -27,6 +30,7 @@ const SingleCandidateProfile = ({ data, openClick }) => {
 
   useEffect(() => {
     const candidateData = {
+      mediaId: data.mediaId,
       url: data.url,
       name: data.name,
       workExperiences: data.workExperiences,
@@ -48,7 +52,7 @@ const SingleCandidateProfile = ({ data, openClick }) => {
     };
 
     setCandidateInfo(candidateData);
-  }, []);
+  }, [data]);
 
   const onClickImagePost = (empId) => {
     window.open(`/employer/candidates/${empId}`, "_blank");
@@ -58,9 +62,10 @@ const SingleCandidateProfile = ({ data, openClick }) => {
     openClick(candidateInfo);
   };
 
-  const onClickCvTitle = (url) => {
+  const onClickCvTitle = async (url, userId, mediaId) => {
+    viewProfileJSK(userId, mediaId)
     window.open(url, "_blank");
-  };
+  }
 
   const getTypeJob = (type) => {
     if (type === "FULL_TIME") return "Full time";
@@ -106,6 +111,41 @@ const SingleCandidateProfile = ({ data, openClick }) => {
     return body;
   };
 
+  const removeVietnameseAccents = (str) => {
+    const map = {
+      'à': 'a', 'á': 'a', 'ả': 'a', 'ã': 'a', 'ạ': 'a',
+      'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ẳ': 'a', 'ẵ': 'a', 'ặ': 'a',
+      'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ẩ': 'a', 'ẫ': 'a', 'ậ': 'a',
+      'đ': 'd',
+      'è': 'e', 'é': 'e', 'ẻ': 'e', 'ẽ': 'e', 'ẹ': 'e',
+      'ê': 'e', 'ề': 'e', 'ế': 'e', 'ể': 'e', 'ễ': 'e', 'ệ': 'e',
+      'ì': 'i', 'í': 'i', 'ỉ': 'i', 'ĩ': 'i', 'ị': 'i',
+      'ò': 'o', 'ó': 'o', 'ỏ': 'o', 'õ': 'o', 'ọ': 'o',
+      'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ổ': 'o', 'ỗ': 'o', 'ộ': 'o',
+      'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ở': 'o', 'ỡ': 'o', 'ợ': 'o',
+      'ù': 'u', 'ú': 'u', 'ủ': 'u', 'ũ': 'u', 'ụ': 'u',
+      'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ử': 'u', 'ữ': 'u', 'ự': 'u',
+      'ỳ': 'y', 'ý': 'y', 'ỷ': 'y', 'ỹ': 'y', 'ỵ': 'y',
+      'À': 'A', 'Á': 'A', 'Ả': 'A', 'Ã': 'A', 'Ạ': 'A',
+      'Ă': 'A', 'Ằ': 'A', 'Ắ': 'A', 'Ẳ': 'A', 'Ẵ': 'A', 'Ặ': 'A',
+      'Â': 'A', 'Ầ': 'A', 'Ấ': 'A', 'Ẩ': 'A', 'Ẫ': 'A', 'Ậ': 'A',
+      'Đ': 'D',
+      'È': 'E', 'É': 'E', 'Ẻ': 'E', 'Ẽ': 'E', 'Ẹ': 'E',
+      'Ê': 'E', 'Ề': 'E', 'Ế': 'E', 'Ể': 'E', 'Ễ': 'E', 'Ệ': 'E',
+      'Ì': 'I', 'Í': 'I', 'Ỉ': 'I', 'Ĩ': 'I', 'Ị': 'I',
+      'Ò': 'O', 'Ó': 'O', 'Ỏ': 'O', 'Õ': 'O', 'Ọ': 'O',
+      'Ô': 'O', 'Ồ': 'O', 'Ố': 'O', 'Ổ': 'O', 'Ỗ': 'O', 'Ộ': 'O',
+      'Ơ': 'O', 'Ờ': 'O', 'Ớ': 'O', 'Ở': 'O', 'Ỡ': 'O', 'Ợ': 'O',
+      'Ù': 'U', 'Ú': 'U', 'Ủ': 'U', 'Ũ': 'U', 'Ụ': 'U',
+      'Ư': 'U', 'Ừ': 'U', 'Ứ': 'U', 'Ử': 'U', 'Ữ': 'U', 'Ự': 'U',
+      'Ỳ': 'Y', 'Ý': 'Y', 'Ỷ': 'Y', 'Ỹ': 'Y', 'Ỵ': 'Y'
+    };
+
+    return str.replace(/[^A-Za-z0-9]/g, function (x) {
+      return map[x] || x;
+    });
+  }
+
   return (
     <div className="cart">
       <img
@@ -119,17 +159,18 @@ const SingleCandidateProfile = ({ data, openClick }) => {
       <div className="cart-info">
         <div className="gr-name-btn-view">
           <div>
-            <p className="title" onClick={() => onClickImagePost(candidateInfo.user.id)} style={{ color: "#0c62ad" }}>
-              {candidateInfo.user.name}
+            <p className="title" onClick={() => onClickCvTitle(candidateInfo.url, candidateInfo.user.id, candidateInfo.mediaId)} style={{ color: "#0c62ad" }}>
+              {candidateInfo.name}
             </p>
           </div>
           <div className="btn-view" onClick={() => onClickProfileBtn(candidateInfo)}>
             View profile
           </div>
         </div>
-        <div className="cart-description-profile" style={{ cursor: "pointer" }} onClick={() => onClickCvTitle(candidateInfo.url)}>
+        <div className="cart-description-profile" style={{ cursor: "pointer" }}
+          onClick={() => onClickImagePost(candidateInfo.user.id)}>
           <i className="fa fa-file-text-o" aria-hidden="true" style={{ margin: "0 5px", color: "#0c62ad" }}></i>
-          {candidateInfo.name} - <small style={{ fontSize: "1em", color: "black" }}>Last modified: {getPostDate(candidateInfo.lastModified)}</small>
+          {candidateInfo.user.name} - <small style={{ fontSize: "1em", color: "black", fontWeight:400 }}>Last modified: {getPostDate(candidateInfo.lastModified)}</small>
         </div>
         <div className="row-flex-horizon flex-wrap">
           <div className="list-item-flex-start">
@@ -143,7 +184,7 @@ const SingleCandidateProfile = ({ data, openClick }) => {
               <p>{getTypeJob(candidateInfo.method)}</p>
             </div>
             <div className="item">
-              <p>{candidateInfo.user.city !== null ? candidateInfo.user.city.name : "Location: Not update"}</p>
+              <p>{candidateInfo.user.city !== null ?removeVietnameseAccents(candidateInfo.user.city.name) : "Location: Not update"}</p>
             </div>
           </div>
         </div>

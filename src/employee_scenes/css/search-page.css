@@ -15,29 +15,9 @@
     /* width: 80%; */
 }
 
-
-div.button {
-    display: flex;
-    align-items: center;
-    border: 1px solid #0C62AD;
-    color: #0C62AD;
-    padding: 0.8em;
-    gap: 0.5em;
-    font-weight: bold;
-    box-shadow: 1px 1px 3px gray;
-    width: max-content;
-    min-width: 100px;
-    font-size: 1em;
-    border-radius: 5px;
-    text-align: center;
-    justify-content: center;
-}
-
 .styling-btn-search {
     padding: 0.5em 3.4em !important;
     gap: 0.3em !important;
-    color: #fff !important;
-    background-color: #0c62ad !important;
     font-weight: normal !important;
     border-radius: 5px;
 }
@@ -151,7 +131,7 @@ div.button:hover {
     width: 66%;
     display: flex;
     flex-direction: column;
-    padding: 1.4em;
+    padding: 0 1.4em 1.4em 1.4em;
     margin-bottom: 1.5em;
     gap: 1.5em;
     box-sizing: border-box;

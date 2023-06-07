@@ -1,0 +1,67 @@
+.hightlight-company {
+
+    padding: 2em 10%;
+    background-color: #f5f5f5;
+
+}
+
+.hightlight-company h1 {
+    text-align: center;
+    font-size: 1.6em;
+}
+
+.hightlight-company h3 {
+    text-indent: 20px;
+}
+
+.hightlight-company .list-company {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.hightlight-company .list-company .single-company {
+    width: 33.33%;
+    box-sizing: border-box;
+    padding: 1em 3em 1em 3em;
+}
+
+.hightlight-company .list-company .single-company:hover {
+    cursor: pointer;
+}
+
+.hightlight-company .list-company .single-company .single-company-wrapper {
+    position: relative;
+    background-color: white;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px #cfcfcf;
+}
+
+.hightlight-company .cover {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 50px;
+}
+
+.hightlight-company .avatar {
+    position: absolute;
+    left: 20px;
+    top: 150px;
+    height: 100px;
+    width: 100px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 5px;
+}
+
+.hightlight-company .description {
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    text-align: justify;
+    padding: 0 10px;
+
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
+}

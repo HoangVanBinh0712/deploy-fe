@@ -2,7 +2,7 @@
 [ FONT ]*/
 
 @font-face {
-  font-family: Poppins-Regular;
+
   src: url('../../../assets/fonts/poppins/Poppins-Regular.ttf');
 }
 
@@ -48,7 +48,7 @@ html {
 
 /*---------------------------------------------*/
 /* a {
-  font-family: Poppins-Regular;
+   
   font-size: 14px;
   line-height: 1.7;
   color: #666666;
@@ -78,13 +78,13 @@ h6 {
   margin: 0px;
 }
 
-p {
-  font-family: Poppins-Regular;
-  font-size: 14px;
+/* p {
+
+  font-size: 1em;
   line-height: 1.7;
   color: #666666;
   margin: 0px;
-}
+} */
 
 ul,
 li {
@@ -114,7 +114,7 @@ iframe {
 /*==================================================================
 [ Text ]*/
 .txt1 {
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   line-height: 1.4;
   color: #207198;
@@ -122,7 +122,7 @@ iframe {
 }
 
 .recruit {
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   line-height: 1.4;
   color: #207198;
@@ -186,9 +186,12 @@ iframe {
 
 .login100-form {
   width: 40%;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   background-color: #ffffff;
-  padding: 60px 55px 55px 55px;
+  justify-content: center;
+  padding-right: 2em;
 }
 
 .login100-form-title {
@@ -358,7 +361,6 @@ iframe {
   width: 100%;
   height: 60px;
   padding: 12px 1.2em;
-  margin: 8px 0;
   box-sizing: border-box;
   border: 2px solid #207198;
   border-radius: 8px;
@@ -415,7 +417,7 @@ i.fa-eye {
 }
 
 .txt3 {
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   color: #207198;
   text-decoration: none;
@@ -426,13 +428,13 @@ i.fa-eye {
 .link-to-register {
   text-decoration: none;
   color: #345ADF;
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   margin: 0;
 }
 
 .l-email {
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   display: block;
   margin: 0;
@@ -440,7 +442,7 @@ i.fa-eye {
 }
 
 .l-password {
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   display: block;
   margin: 0;
@@ -464,11 +466,11 @@ i.fa-eye {
 .group-password {
   width: 100%;
   height: 60px;
-  margin: 8px 0;
   box-sizing: border-box;
   border: 2px solid #207198;
   border-radius: 8px;
   display: inline-flex;
+  position: relative;
 }
 
 .frame-logo-login {
@@ -483,4 +485,21 @@ i.fa-eye {
 .picture-login-page img {
   width: 70%;
   height: auto;
+}
+
+.div-line-input {
+  margin-bottom: 0.8em;
+}
+
+.label-error-message {
+  color: red !important;
+  font-size: 0.8em !important;
+  font-weight: bold !important;
+}
+
+.send-code-email {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 0.8em;
 }

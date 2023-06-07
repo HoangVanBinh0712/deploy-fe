@@ -2,11 +2,11 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import { useToast } from '../../contexts/Toast';
+import WaitingResponeButton from '../../components/WaitingResponeButton';
+import swal from "sweetalert";
 
 const UpdateResume = () => {
   const { updateResume, getResume, deleteResume } = useContext(AuthContext)
-  const { warn, success } = useToast();
 
   const [allResume, setAllResume] = useState([])
 
@@ -17,6 +17,7 @@ const UpdateResume = () => {
   const [skillsAndKnowledges, setSkillsAndKnowledges] = useState('')
   const [experience, setExperience] = useState("NONE")
   const [position, setPosition] = useState("Staff")
+  const [isWaitingRes, setIsWaitingRes] = useState(false)
   const [method, setMethod] = useState("FULL_TIME")
 
   const getAllResume = async () => {
@@ -72,58 +73,111 @@ const UpdateResume = () => {
 
   const onClickConfirm = async () => {
     if (mediaId !== -1) {
-      const confirm = window.confirm("Are you sure you want to update infomation of this resume?");
-      if (confirm) {
-        const currentResume = {
-          mediaId: mediaId,
-          isPublic: isPublic,
-          name: name,
-          workExperiences: workExperiences,
-          skillsAndKnowledges: skillsAndKnowledges,
-          experience: experience,
-          position: position,
-          method: method,
+      swal({
+        title: "Information",
+        icon: "warning",
+        text: "Are you sure you want to update infomation of this resume?",
+        dangerMode: false,
+        buttons: true,
+      }).then(async (click) => {
+        if (click) {
+          const currentResume = {
+            mediaId: mediaId,
+            isPublic: isPublic,
+            name: name,
+            workExperiences: workExperiences,
+            skillsAndKnowledges: skillsAndKnowledges,
+            experience: experience,
+            position: position,
+            method: method,
+          }
+          const res = await updateResume(currentResume)
+          if (res.success) {
+            swal({
+              title: "Success",
+              icon: "success",
+              text: "Updated successfully",
+              dangerMode: false,
+            })
+          }
+          else swal({
+            title: "Error",
+            icon: "warning",
+            text: res.message,
+            dangerMode: true,
+          })
         }
-        const res = await updateResume(currentResume)
-        if (res.success) {
-          success(res.message)
-        }
-        else warn(res.message)
-      }
+      })
     }
   }
 
   const onClickCancel = () => {
-    const confirm = window.confirm("Are you sure you want to cancel, the information you changed will not be saved?");
-    if (confirm) {
-      const result = allResume.find(item => item.mediaId == mediaId);
-      if (result !== undefined) {
-        setMediaId(result.mediaId)
-        setIsPublic(result.isPublic)
-        setName(result.name)
-        setWorkExperiences(result.workExperiences)
-        setSkillsAndKnowledges(result.skillsAndKnowledges)
-        setExperience(result.experience)
-        setPosition(result.position)
-        setMethod(result.method)
+    swal({
+      title: "Information",
+      icon: "warning",
+      text: "Are you sure you want to cancel, the information you changed will not be saved?",
+      dangerMode: false,
+      buttons: true,
+    }).then(async (click) => {
+      if (click) {
+        const result = allResume.find(item => item.mediaId == mediaId);
+        if (result !== undefined) {
+          setMediaId(result.mediaId)
+          setIsPublic(result.isPublic)
+          setName(result.name)
+          setWorkExperiences(result.workExperiences)
+          setSkillsAndKnowledges(result.skillsAndKnowledges)
+          setExperience(result.experience)
+          setPosition(result.position)
+          setMethod(result.method)
+        }
       }
-    }
+    })
+
   }
 
   const onClickDelete = async () => {
+    setIsWaitingRes(true)
     if (mediaId !== -1) {
-      const confirm = window.confirm("Are you sure you want to delete this resume?");
-      if (confirm) {
-        const res= await deleteResume(mediaId)
-        if (res.success) {
-          success(res.message)
+      swal({
+        title: "Are you sure you want to cancel?",
+        icon: "info",
+        text: "The information you changed will not be saved",
+        buttons: {
+          cancel: "Cancel",
+          confirm: "Yes"
+        },
+      }).then(async (click) => {
+        if (click) {
+          const res = await deleteResume(mediaId)
+          if (res.success) {
+            swal({
+              title: "Success",
+              icon: "success",
+              text: "Deleted successfully",
+              dangerMode: false,
+            }).then(() => {
+              getAllResume()
+            })
+          }
+          else swal({
+            title: "Error",
+            icon: "warning",
+            text: res.message,
+            dangerMode: true,
+          })
         }
-        else warn(res.message)
-      }
+      });
     }
+    setIsWaitingRes(false)
+
   }
 
-
+  const getCvUrl = (id) => {
+    const cvUrl = allResume.find(item => item.mediaId === id)
+    if (cvUrl === undefined) return '';
+    else return cvUrl.url;
+  }
 
   return (
     <div style={{ width: "80%" }}>
@@ -140,6 +194,9 @@ const UpdateResume = () => {
                 : (allResume.map((r, id) => (<option value={r.mediaId} key={id}>{r.name}</option>)))}
 
             </select>
+            <div style={{ display: 'flex', justifyContent: 'end', color: '#0c62ad', marginBottom: '-30px', paddingTop: '5px' }}>
+              <a href={getCvUrl(mediaId)} target='_blank' style={{ backgroundColor: 'none', color: '#0c62ad' }}>View CV</a>
+            </div>
           </div>
           <div className="input-wrapper">
             <div className="label">Name</div>
@@ -214,10 +271,17 @@ const UpdateResume = () => {
               <i className="fa fa-times" aria-hidden="true"></i>
               Cancel
             </div>
-            <div className="button delete" onClick={onClickDelete}>
-              <i className="fa fa-trash-o" aria-hidden="true"></i>
-              Delete
-            </div>
+            {isWaitingRes ? (
+              <div className="button-waiting">
+                <WaitingResponeButton />
+              </div>
+            ) : (
+              <div className="button delete" onClick={onClickDelete}>
+                <i className="fa fa-trash-o" aria-hidden="true"></i>
+                Delete
+              </div>
+            )}
+
           </div>
         </div>
       </div>

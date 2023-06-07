@@ -35,7 +35,9 @@ const SinglePurchareRow = ({ order }) => {
         }
         if (state === 'WAIT_FOR_PAYMENT') {
             body = (
-                <div className='pay-order-btn'>
+                <div className='pay-order-btn' onClick={()=>{
+                    window.open(data.paymentUrl);
+                }}>
                     <i className="fa fa-paypal" aria-hidden="true"
                         style={{ marginRight: '5px', color: "#0c62ad" }}></i>
                     Pay now

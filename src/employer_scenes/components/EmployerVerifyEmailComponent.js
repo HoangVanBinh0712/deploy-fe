@@ -1,11 +1,10 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useToast } from "../../contexts/Toast";
+import swal from "sweetalert";
 
 const EmployerVerifyEmail = () => {
 
     const { authState: { user }, sendVirifyCode, verifyEmail, } = useContext(AuthContext)
-    const { warn, success } = useToast();
 
     const [verifyCode, setVerifyCode] = useState('')
     const onChangeVerifyCode = (event) => setVerifyCode(event.target.value)
@@ -17,10 +16,20 @@ const EmployerVerifyEmail = () => {
         setClickBtn(false)
         const res = await sendVirifyCode(user.email)
         if (res.success) {
-            success(res.message)
+            swal({
+                title: "Success",
+                icon: "success",
+                text: res.message,
+                dangerMode: false,
+              })
         }
         else {
-            warn(res.message)
+            swal({
+                title: "Error",
+                icon: "warning",
+                text: res.message,
+                dangerMode: true,
+              })
         }
         setClickBtn(true)
     }
@@ -36,9 +45,19 @@ const EmployerVerifyEmail = () => {
         else {
             const res = await verifyEmail(user.email, verifyCode)
             if (res.success) {
-                success('Email verification successful!')
+                swal({
+                    title: "Success",
+                    icon: "success",
+                    text: "Email verification successfully",
+                    dangerMode: false,
+                  })
             }
-            else warn(res.message)
+            else swal({
+                title: "Error",
+                icon: "warning",
+                text: res.message,
+                dangerMode: true,
+              })
         }
         setClickBtn(true)
     }

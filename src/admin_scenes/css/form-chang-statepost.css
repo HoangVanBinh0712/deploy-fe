@@ -1,0 +1,95 @@
+.change-post-status-form {
+    width: 100%;
+    height: 100%;
+    padding: 10% 37%;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.form-change-state-control {
+    background-color: #fff;
+    padding: 1.2em;
+    border-radius: 5px;
+    min-height: 300px;
+
+}
+
+.al-content-btn {
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.gr-btn-status-post {
+    display: flex;
+    min-height: 140px;
+    gap: 1em;
+    justify-content: center;
+}
+
+.btn-accept-post-admin {
+    height: 60px;
+    width: 140px;
+    background-color: rgb(37, 128, 37);
+    border-radius: 5px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.name-type-state-admin {
+    display: flex;
+    width: 140px;
+    height: 36px;
+    font-weight: 600;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox-state-post-admin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-denied-post-admin {
+    height: 60px;
+    width: 140px;
+    background-color: rgb(247, 90, 90);
+    border-radius: 5px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.cus-btn-active-admin {
+    background-color: rgb(80, 149, 80);
+    margin-right: 10px;
+}
+
+.cus-btn-unactive-admin {
+    margin-right: 10px;
+    background-color: rgb(247, 90, 90);
+}
+
+.textarea-view-post-details > p,
+.textarea-view-post-details > b,
+.textarea-view-post-details > span,
+.textarea-view-post-details > strong,
+.textarea-view-post-details > i,
+.textarea-view-post-details > ul,
+.textarea-view-post-details > li,
+.textarea-view-post-details > em {
+    font-family: inherit;
+    font-size: 13px;
+}
+
+#desc-post-report-view {
+    height: 100px;
+    overflow-y: auto;
+    border: 1px solid #cfcfcf;
+    border-radius: 3px;
+}

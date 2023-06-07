@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -15,10 +15,14 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AddchartIcon from '@mui/icons-material/Addchart';
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   return (
     <MenuItem
       active={selected === title}
@@ -39,6 +43,7 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const {authState:{user}} = useContext(AuthContext)
 
   return (
     <Box
@@ -106,7 +111,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Nguyen Sy Manh
+                  {user?.name}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   Admin
@@ -117,6 +122,7 @@ const Sidebar = () => {
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
+              color='#fff'
               title="Dashboard"
               to="/admin/dashboard"
               icon={<HomeOutlinedIcon />}
@@ -132,7 +138,7 @@ const Sidebar = () => {
               Management
             </Typography>
             <Item
-              title="Users management"
+              title="Users Management"
               to="/admin/account"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
@@ -166,16 +172,16 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
+            {/* <Item
               title="Notifications Management"
               to="/admin/reports"
               icon={<CircleNotificationsIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
             <Item
               title="Revenue management"
-              to="/admin/reports"
+              to="/admin/revenues"
               icon={<MonetizationOnIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -189,32 +195,33 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="User Statistics"
-              to="/admin/line"
-              icon={<TimelineOutlinedIcon />}
+              to="/admin/user-statitics"
+              icon={<AddchartIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Post Statistics"
-              to="/admin/line"
+              to="/admin/post-statitics"
               icon={<TimelineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-            {/* <Item
-              title="Bar Chart"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
+            <Item
+              title="Revenue Statistics"
+              to="/admin/revenue-statitics"
+              icon={<AttachMoneyIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
-            {/* <Item
-              title="Pie Chart"
-              to="/pie"
-              icon={<PieChartOutlineOutlinedIcon />}
+            />
+            <Item
+              title="Report Statistics"
+              to="/admin/report-statitics"
+              icon={<FlagCircleIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
+            />
+
           </Box>
         </Menu>
       </ProSidebar>

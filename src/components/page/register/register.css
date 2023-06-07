@@ -2,7 +2,7 @@
 [ FONT ]*/
 
 @font-face {
-  font-family: Poppins-Regular;
+
   src: url('../../../assets/fonts/poppins/Poppins-Regular.ttf');
 }
 
@@ -47,7 +47,7 @@ html {
 
 /*---------------------------------------------*/
 /* a {
-  font-family: Poppins-Regular;
+   
   font-size: 14px;
   line-height: 1.7;
   color: #666666;
@@ -77,13 +77,12 @@ h6 {
   margin: 0px;
 }
 
-p {
-  font-family: Poppins-Regular;
-  font-size: 14px;
+/* p {
+  font-size: 1em;
   line-height: 1.7;
   color: #666666;
   margin: 0px;
-}
+} */
 
 ul,
 li {
@@ -113,7 +112,7 @@ iframe {
 /*==================================================================
   [ Text ]*/
 .txt1 {
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   line-height: 1.4;
   color: #207198;
@@ -122,7 +121,7 @@ iframe {
 }
 
 .recruit {
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   line-height: 1.4;
   color: #207198;
@@ -188,9 +187,12 @@ iframe {
 
 .register100-form {
   width: 40%;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   background-color: #ffffff;
-  padding: 60px 55px 55px 55px;
+  justify-content: center;
+  padding-right: 2em;
 }
 
 .register100-form input::placeholder {
@@ -428,7 +430,7 @@ i.fa-eye {
 }
 
 .txt3 {
-  font-family: Poppins-Regular;
+
   font-size: 1em;
   color: #207198;
   text-decoration: none;
@@ -448,7 +450,7 @@ i.fa-eye {
 }
 
 .lb-name {
-  font-family: Poppins-Regular;
+  font-weight: bold;
   font-size: 1em;
   color: #207198;
   display: block;

@@ -1,10 +1,9 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useToast } from "../../contexts/Toast";
+import swal from "sweetalert";
 
 const EmployerChangePassword = () => {
     const { changEmpPassword } = useContext(AuthContext)
-    const { warn, success } = useToast();
 
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
@@ -52,7 +51,12 @@ const EmployerChangePassword = () => {
         else {
             const checkPassword = validatePassword(oldPassword, newPassword, confirmPassword)
             if (!checkPassword.success) {
-                warn(checkPassword.message)
+                swal({
+                    title: "Error",
+                    icon: "warning",
+                    text: checkPassword.message,
+                    dangerMode: true,
+                  })
             }
             else {
                 const confirm = window.confirm("Are you sure you want to change your password?");
@@ -64,10 +68,20 @@ const EmployerChangePassword = () => {
                 if (confirm) {
                     const res = await changEmpPassword(pw);
                     if (res.success) {
-                        success('Changed password successfully!')
+                        swal({
+                            title: "Success",
+                            icon: "success",
+                            text: "Changed password successfully",
+                            dangerMode: false,
+                          })
                     }
                     else {
-                        warn(res.message)
+                        swal({
+                            title: "Error",
+                            icon: "warning",
+                            text: res.message,
+                            dangerMode: true,
+                          })
                     }
                 }
             }

@@ -27,11 +27,11 @@ const PageCustomerServices = () => {
                 For quick support, get in touch directly through our social media pages. There is always an operator to support you.
                 </p>
                 <div className="gr-social">
-                <a className="icon-fb" href="https://www.facebook.com/profile.php?id=100076529407000">
+                <a className="icon-fb" href="https://www.facebook.com/profile.php?id=100076529407000" target='blank'>
                      <img src={fbIcon} alt="fb-pic" height="300px" width="300px"/>
                      <p className="fb-title">Facebook</p>
                      </a>
-                <a className="icon-ig" href="https://www.instagram.com/tbao_01/">
+                <a className="icon-ig" href="https://www.instagram.com/tbao_01/" target='blank'>
                      <img src={insIcon} alt="fb-pic" height="300px" width="300px"/>
                      <p className="fb-title">Instagram</p>
                      </a>

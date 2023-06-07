@@ -9,12 +9,12 @@ import { useState, useContext, useEffect } from 'react'
 import { useToast } from '../../contexts/Toast'
 import { GlobalContext } from '../../contexts/GlobalContext'
 import { AuthContext } from '../../contexts/AuthContext'
+import swal from "sweetalert";
 
 const SearchCandidates = () => {
 
-    const { getUserProfileByAnyFilter } = useContext(AuthContext)
+    const { getUserProfileByAnyFilter, viewProfileJSK } = useContext(AuthContext)
     const { globalState: { cities, industries } } = useContext(GlobalContext)
-    const { warn, success } = useToast()
     // single-time read
     const [listProfileResult, setListProfileResult] = useState([])
 
@@ -31,6 +31,7 @@ const SearchCandidates = () => {
     const [inputKeyword, setKeyword] = useState('')
     const [selectIndustry, setIndustry] = useState('')
     const [inputCity, setCity] = useState('')
+    const [isSearched, setIsSearched] = useState(false)
     const onChangeInputKeyword = (event) => {
         setKeyword(event.target.value)
     }
@@ -52,7 +53,7 @@ const SearchCandidates = () => {
     }
 
     const createSearchPararam = (obj) => {
-        let searchQuery = '?limit=32'
+        let searchQuery = '?limit=48'
         for (let prop in obj) {
             if (obj[prop].length > 0) {
                 searchQuery += `&${prop}=${obj[prop]}`
@@ -65,8 +66,14 @@ const SearchCandidates = () => {
         const res = await getUserProfileByAnyFilter(searchQr)
         if (res.success) {
             setListProfileResult(res.data)
+            setAllPost(chuckPosts(res.data, 6))
         }
-        else warn(res.message)
+        else swal({
+            title: "Error",
+            icon: "warning",
+            text: res.message,
+            dangerMode: true,
+        })
     }
 
     function chuckPosts(arr, len) {
@@ -79,14 +86,21 @@ const SearchCandidates = () => {
         return chunks;
     }
 
-    const allPost = chuckPosts(listProfileResult, 6)
 
+    const [allPost, setAllPost] = useState([])
     const [currentPage, setCurrentPage] = useState(0)
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+    
+    useEffect(() => {
         const searchQuery = createSearchPararam(searchInfo)
         getCvSearch(searchQuery)
-
+        if (searchQuery.length > 9) {
+            setIsSearched(true)
+        }
+        else setIsSearched(false)
     }, [searchInfo])
 
     const onChangeExp = (event) => {
@@ -163,7 +177,8 @@ const SearchCandidates = () => {
 
     const [candidateInfo, setCandidateInfo] = useState(initCandidate)
 
-    const onClickCvTitle = (url) => {
+    const onClickCvTitle = async (url, userId, mediaId) => {
+        viewProfileJSK(userId, mediaId)
         window.open(url, "_blank");
     }
 
@@ -176,12 +191,11 @@ const SearchCandidates = () => {
         setIsOpenProfile(false)
         setCandidateInfo(initCandidate)
     }
-
     return (
         <>
-            <div className="search-page" style={{width: "80%"}}>
+            <div className="search-page" style={{ width: "80%" }}>
                 <img className="banner" src={bannerSearch} alt="" />
-                <div className="search-bar" style={{width: "100%"}}>
+                <div className="search-bar" style={{ width: "100%" }}>
                     <div className="row-flex-horizon" style={{ marginBottom: '1em' }}>
                         <input className="search-text" type="text"
                             placeholder="Infomation, position you want ..."
@@ -204,7 +218,7 @@ const SearchCandidates = () => {
                             ))}
                         </select>
                         <div className="button styling-btn-search" onClick={() => { onClickSearch() }}>
-                            <i className="fa fa-search" aria-hidden="true" style={{ color: 'white' }}></i>
+                            <i className="fa fa-search" aria-hidden="true"></i>
                             Search
                         </div>
                     </div>
@@ -242,8 +256,13 @@ const SearchCandidates = () => {
                     </div>
 
                 </div>
-                <div className='quantity-number-rusult' style={{width: "98%"}}> Found <p> {listProfileResult.length} </p> jobs matching your request.</div>
-                <div className="search-content" style={{width: "100%"}}>
+                {isSearched ? (
+                    <div className='quantity-number-rusult' style={{ width: "98%" }}> Found <p> {listProfileResult.length} </p> candidates matching your request.</div>
+                ) : (
+                    <div className='quantity-number-rusult' style={{ width: "98%" }}> We have <p> {listProfileResult.length} </p> candidates.</div>
+                )}
+
+                <div className="search-content" style={{ width: "100%" }}>
                     <div className="list-post" style={{ width: '100%' }}>
                         {listProfileResult.length > 0 ? (<>
                             {allPost[currentPage].map((a, id) => (
@@ -270,8 +289,8 @@ const SearchCandidates = () => {
 
                 </div>
             </div>
-            <div className='form-candidate-profile' onClick={(e)=>{
-                if(!document.getElementById('form-info-candidate-control').contains(e.target))
+            <div className='form-candidate-profile' onClick={(e) => {
+                if (!document.getElementById('form-info-candidate-control').contains(e.target))
                     setIsOpenProfile(false)
             }} style={isOpenProfile ? { display: 'block' } : { display: 'none' }}>
                 <div className='form-info-candidate-control' id='form-info-candidate-control'>
@@ -315,7 +334,7 @@ const SearchCandidates = () => {
                         {' * '}Click on profile name to view.
                     </div>
                     <div className="cart-description-profile" style={{ cursor: 'pointer', paddingLeft: '20px' }}
-                        onClick={() => onClickCvTitle(candidateInfo.url)}>
+                        onClick={() => onClickCvTitle(candidateInfo.url, candidateInfo.user.id, candidateInfo.mediaId)}>
                         <i className="fa fa-file-text-o" aria-hidden="true" style={{ margin: '0 5px', color: '#0c62ad' }}></i>
                         {candidateInfo.name}
                     </div>

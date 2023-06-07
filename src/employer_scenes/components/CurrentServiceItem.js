@@ -30,13 +30,13 @@ const CurrentServiceItem = ({ user }) => {
     }
 
     return (
-        <div className="row-data-single-item" style={{height:'200px'}}>
+        <div className="row-data-single-item" style={{ height: '200px' }}>
             <div className='time-and-state-oder'>
                 <div className='create-time-order'>
                     Name: <p>{user.name}</p>
                     - Email: <p>{user.email}</p>
                 </div>
-                <div className='state-order-paid-wait' style={{color:'green'}}>
+                <div className='state-order-paid-wait' style={{ color: 'green' }}>
                     Expiration Date: {getPostDate(user.serviceExpirationDate, false)}
                 </div>
             </div>
@@ -48,22 +48,28 @@ const CurrentServiceItem = ({ user }) => {
                 <div style={{ width: '13%' }} className='title-item'> Filter CV submit</div>
                 <div style={{ width: '12%' }} className='title-item'> Service prices</div>
             </div>
-            <div className='col-item-data-order-content' style={{padding:'25px 0'}}>
-                <div style={{ width: '25%', paddingLeft: '20px' }}> {user.service.name}</div>
-                <div style={{ width: '13%' }} className='title-item upper-letter'> {user.service.type}</div>
-                <div style={{ width: '13%' }} className='title-item'>
-                    {user.service.postDuration > 1 ? `${user.service.postDuration}${' '}months` : `${user.service.postDuration}${' '}month`}
+            {user.service === null ? (
+                <>
+                    You have not purchased any services from BHQ!
+                </>
+            ) : (
+                <div className='col-item-data-order-content' style={{ padding: '25px 0' }}>
+                    <div style={{ width: '25%', paddingLeft: '20px' }}> {user.service.name}</div>
+                    <div style={{ width: '13%' }} className='title-item upper-letter'> {user.service.type}</div>
+                    <div style={{ width: '13%' }} className='title-item'>
+                        {user.service.postDuration > 1 ? `${user.service.postDuration}${' '}months` : `${user.service.postDuration}${' '}month`}
+                    </div>
+                    <div style={{ width: '13%' }} className='title-item'>
+                        {checkProfit(user.service.canSearchCV)}
+                    </div>
+                    <div style={{ width: '13%' }} className='title-item'>
+                        {checkProfit(user.service.canFilterCVSubmit)}
+                    </div>
+                    <div style={{ width: '12%', color: "#0c62ad" }} className='title-item'>
+                        {user.service.price}{' '}{user.service.currency}
+                    </div>
                 </div>
-                <div style={{ width: '13%' }} className='title-item'>
-                    {checkProfit(user.service.canSearchCV)}
-                </div>
-                <div style={{ width: '13%' }} className='title-item'>
-                    {checkProfit(user.service.canFilterCVSubmit)}
-                </div>
-                <div style={{ width: '12%', color: "#0c62ad" }} className='title-item'>
-                    {user.service.price}{' '}{user.service.currency}
-                </div>
-            </div>
+            )}\
         </div>
     )
 }

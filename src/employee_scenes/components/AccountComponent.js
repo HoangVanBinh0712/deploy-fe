@@ -85,7 +85,7 @@ const UserAccount = () => {
 
           <div className="label" id={listLabel.recordManage} onClick={(e) => activeClick(e)}>
             <i className="fa fa-chevron-down" aria-hidden="true"></i>
-            Records management
+            Record management
           </div>
           <ul className="nav-item">
             <li className={getPath() === "add-resume" ? "selected" : ""}>
@@ -97,7 +97,7 @@ const UserAccount = () => {
             <li className={getPath() === "update-resume" ? "selected" : ""}>
               <Link className="nav-text" to="update-resume">
                 <img src={editIcon} alt="" className="nav-icon"></img>
-                Update your resume
+                Resume management
               </Link>
             </li>
             <li className={getPath() === "predict-job" ? "selected" : ""}>
@@ -139,7 +139,7 @@ const UserAccount = () => {
             <li className={getPath() === "recruiter-followed" ? "selected" : ""}>
               <Link className="nav-text" to="recruiter-followed">
                 <img src={followedIcon} alt="" className="nav-icon"></img>
-                Followed
+                Favorites
               </Link>
             </li>
           </ul>

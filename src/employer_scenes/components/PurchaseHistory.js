@@ -88,8 +88,8 @@ const PurchaseHistory = () => {
             </div>
             <div className="free-space" id="free-space">
                 <div className='overal-group-chose'>
-                    <div className='title-group-overal group-manager-post-title'>
-                        Overal:
+                    <div className='title-filter title-group-overal group-manager-post-title '>
+                        Overall:
                     </div>
                     <div className='title-group-overal group-manager-post over-all' onClick={() => { onClickAllService() }}>
                         <div>
@@ -119,7 +119,7 @@ const PurchaseHistory = () => {
                         <div className='title-filter'>
                             Filter:
                         </div>
-                        <div className='select-item' style={{ marginLeft: "10px" }}>
+                        <div className='select-item'>
                             <select onChange={onChangeSelectPost} defaultValue={''}>
                                 <option value={''} > All Purchases</option>
                                 <option value={'PAID'} > Paid</option>

@@ -3,12 +3,10 @@ import SinglePostCvSubmit from "./SinglePostCvSubmit";
 import leftArrow from "../../assets/icons/left-arow-icon.png"
 import rightArrow from "../../assets/icons/right-arow-grey-icon.png"
 import { PostContext } from "../../contexts/PostContext";
-import { useToast } from "../../contexts/Toast";
 
 const CandidatesProfile = () => {
 
     const { getEmpPost } = useContext(PostContext)
-    const { warn, success } = useToast()
 
     const [filter, setFilter]= useState({
         method:'',
@@ -21,7 +19,7 @@ const CandidatesProfile = () => {
     const getallPost = async (keyword) => {
         const res = await getEmpPost(keyword)
         if (res.success) {
-            setPostDisplay(res.data)
+            setPostDisplay(res.data.reverse())
         }
     }
 
@@ -143,9 +141,9 @@ const CandidatesProfile = () => {
                             <p onClick={()=>onClickClearFilter()}>Clear selection </p>
                         </div>
                     </div>
-                    <div className='ex-button' style={{ width: "16%", height: "50px" }}>
+                    {/* <div className='ex-button' style={{ width: "16%", height: "50px", display:'none' }}>
                         <div style={{ marginRight: "20px", justifyContent: "center", display: "flex", width: "100%" }}>Export list</div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="content-wrapper" style={{ height: "580px", padding: "0px", gap: "0" }}>
                     <div className="col-title-listpost">

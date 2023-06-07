@@ -107,19 +107,19 @@ const EmployerAccount = () => {
             <li className={getPath() === "add-post" ? "selected" : ""}>
               <Link className="nav-text" to="add-post">
                 <img src={addPostIcon} alt="" className="nav-icon"></img>
-                Create Post
+                Create post
               </Link>
             </li>
             <li className={getPath() === "job-posting" ? "selected" : ""}>
               <Link className="nav-text" to="job-posting">
                 <img src={jobPostingIcon} alt="" className="nav-icon"></img>
-                Your job posting
+                Job posting
               </Link>
             </li>
           </ul>
           <div className="label" id="candidate-management" onClick={(e) => activeClick(e)}>
             <i className="fa fa-chevron-down" aria-hidden="true"></i>
-            Candidate management
+            Candidate Management
           </div>
           <ul className="nav-item">
             <li className={getPath() === "post-submitted" ? "selected" : ""}>

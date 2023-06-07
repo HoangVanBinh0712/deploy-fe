@@ -3,12 +3,11 @@ import rightArrow from "../../assets/icons/right-arow-grey-icon.png"
 import SinglePost from "./SinglePostComponent";
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import { useToast } from '../../contexts/Toast';
+import swal from "sweetalert";
 
 const PostSubmitted = () => {
 
   const { getResume, getPostSubmitedByResume, } = useContext(AuthContext)
-  const { warn, success } = useToast();
 
   const [allResume, setAllResume] = useState([])
   const [currentResumeId, setCurrentResumeId] = useState(-1)
@@ -17,12 +16,24 @@ const PostSubmitted = () => {
   const predictCV = async (cvId) => {
     const res = await getPostSubmitedByResume(cvId)
     if (res.success) {
-      setListPostSubmited(res.data);
+      setListPostSubmited(res.data.filter((item => item.status === 'ACTIVE')));
+      if (res.data.filter((item => item.status === 'ACTIVE')).length === 0)
+        swal({
+          title: "Error",
+          icon: "warning",
+          text: "*The posts you applied for have expired",
+          dangerMode: true,
+        })
     }
     else {
       setListPostSubmited([]);
-      warn("*Your profile has not applied for any jobs yet")
-    } 
+      swal({
+        title: "Error",
+        icon: "warning",
+        text: "*Your profile has not applied for any jobs yet",
+        dangerMode: true,
+      })
+    }
   }
 
   const getAllResume = async () => {
@@ -77,8 +88,9 @@ const PostSubmitted = () => {
   let postInResultBox
   if (listPostSubmited.length > 0) {
     postInResultBox = (<>
-      {allPost[currentPage].map((p, id) => (
-        <SinglePost post={p} key={id} />
+      {allPost[currentPage].map((p, id) => (<>
+        {p.status === 'ACTIVE' && <SinglePost post={p} key={id} />}
+      </>
       ))
       }
     </>

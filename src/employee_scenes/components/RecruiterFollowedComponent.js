@@ -4,13 +4,12 @@ import rightArrow from "../../assets/icons/right-arow-grey-icon.png"
 import SinglePost from "./SinglePostComponent";
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import { useToast } from '../../contexts/Toast';
+import swal from "sweetalert";
 
 const RecruiterFollowed = () => {
 
 
   const { getEmpFollow } = useContext(AuthContext)
-  const { warn } = useToast();
 
   const [allEmployer, setAllEmployer] = useState([])
 
@@ -20,7 +19,12 @@ const RecruiterFollowed = () => {
     if (res.status===200) {
       setAllEmployer(res.data);
     }
-    else warn(res.message)
+    else swal({
+      title: "Error",
+      icon: "warning",
+      text: res.message,
+      dangerMode: true,
+    })
   }
 
   function chuckPosts(arr) {

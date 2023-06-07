@@ -1,25 +1,30 @@
 import roundheartIcon from "../../assets/icons/round-heart-icon.png"
 import heartIcon from "../../assets/icons/heart-icon.png"
-import logoPost from "../../assets/icons/logo.png"
-import { useToast } from "../../contexts/Toast";
+import logoPost from "../../assets/icons/logo-company.png"
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { PostContext } from "../../contexts/PostContext";
+import swal from "sweetalert";
+import { useNavigate } from "react-router-dom";
 
-const SinglePost = ({ post }) => {
+const SinglePost = ({ post, mediaId }) => {
 
   const { authState: { authloading, role } } = useContext(AuthContext)
   const { postState: { postFollow }, followPost, unfollowPost, } = useContext(PostContext)
-  const { warn, success } = useToast()
+
 
   const aPost = post
+  const navigate = useNavigate();
 
   const onClickImagePost = (empId) => {
-    window.location.href = `/recruiter/${empId}`
+    window.open(`/recruiter/${empId}`)
   }
 
   const onClickPostTitle = (postId) => {
-    window.location.href = `/post/${postId}`
+    if (mediaId > 0)
+      window.open(`/post/${postId}?mediaId=${mediaId}`)
+    else
+      window.open(`/post/${postId}`)
   }
 
   function getDaysDiff(date) {
@@ -38,33 +43,88 @@ const SinglePost = ({ post }) => {
 
   const heartClick = async (id) => {
     if (authloading) {
-      window.location.href = 'user/login'
+      navigate('/user/login')
     }
     else {
       if (role === "ROLE_USER") {
         if (checkFollow(id, postFollow)) {
           const res = await unfollowPost(id)
           if (res.success) {
-            success('The post has been removed from the favorites list.')
+            swal({
+              title: "Success",
+              icon: "success",
+              text: "The post has been removed from the favorites list.",
+              dangerMode: false,
+            })
           }
-          else warn(res.message)
+          else swal({
+            title: "Error",
+            icon: "warning",
+            text: res.message,
+            dangerMode: true,
+          })
         }
         else {
           const res = await followPost(id)
           if (res.success) {
-            success('The article has been added to favorites.')
+            swal({
+              title: "Success",
+              icon: "success",
+              text: "The post has been added to the favorites list.",
+              dangerMode: false,
+            })
           }
-          else warn(res.message)
+          else swal({
+            title: "Error",
+            icon: "warning",
+            text: res.message,
+            dangerMode: true,
+          })
         }
       }
     }
   }
 
+  const removeVietnameseAccents = (str) => {
+    const map = {
+      'à': 'a', 'á': 'a', 'ả': 'a', 'ã': 'a', 'ạ': 'a',
+      'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ẳ': 'a', 'ẵ': 'a', 'ặ': 'a',
+      'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ẩ': 'a', 'ẫ': 'a', 'ậ': 'a',
+      'đ': 'd',
+      'è': 'e', 'é': 'e', 'ẻ': 'e', 'ẽ': 'e', 'ẹ': 'e',
+      'ê': 'e', 'ề': 'e', 'ế': 'e', 'ể': 'e', 'ễ': 'e', 'ệ': 'e',
+      'ì': 'i', 'í': 'i', 'ỉ': 'i', 'ĩ': 'i', 'ị': 'i',
+      'ò': 'o', 'ó': 'o', 'ỏ': 'o', 'õ': 'o', 'ọ': 'o',
+      'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ổ': 'o', 'ỗ': 'o', 'ộ': 'o',
+      'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ở': 'o', 'ỡ': 'o', 'ợ': 'o',
+      'ù': 'u', 'ú': 'u', 'ủ': 'u', 'ũ': 'u', 'ụ': 'u',
+      'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ử': 'u', 'ữ': 'u', 'ự': 'u',
+      'ỳ': 'y', 'ý': 'y', 'ỷ': 'y', 'ỹ': 'y', 'ỵ': 'y',
+      'À': 'A', 'Á': 'A', 'Ả': 'A', 'Ã': 'A', 'Ạ': 'A',
+      'Ă': 'A', 'Ằ': 'A', 'Ắ': 'A', 'Ẳ': 'A', 'Ẵ': 'A', 'Ặ': 'A',
+      'Â': 'A', 'Ầ': 'A', 'Ấ': 'A', 'Ẩ': 'A', 'Ẫ': 'A', 'Ậ': 'A',
+      'Đ': 'D',
+      'È': 'E', 'É': 'E', 'Ẻ': 'E', 'Ẽ': 'E', 'Ẹ': 'E',
+      'Ê': 'E', 'Ề': 'E', 'Ế': 'E', 'Ể': 'E', 'Ễ': 'E', 'Ệ': 'E',
+      'Ì': 'I', 'Í': 'I', 'Ỉ': 'I', 'Ĩ': 'I', 'Ị': 'I',
+      'Ò': 'O', 'Ó': 'O', 'Ỏ': 'O', 'Õ': 'O', 'Ọ': 'O',
+      'Ô': 'O', 'Ồ': 'O', 'Ố': 'O', 'Ổ': 'O', 'Ỗ': 'O', 'Ộ': 'O',
+      'Ơ': 'O', 'Ờ': 'O', 'Ớ': 'O', 'Ở': 'O', 'Ỡ': 'O', 'Ợ': 'O',
+      'Ù': 'U', 'Ú': 'U', 'Ủ': 'U', 'Ũ': 'U', 'Ụ': 'U',
+      'Ư': 'U', 'Ừ': 'U', 'Ứ': 'U', 'Ử': 'U', 'Ữ': 'U', 'Ự': 'U',
+      'Ỳ': 'Y', 'Ý': 'Y', 'Ỷ': 'Y', 'Ỹ': 'Y', 'Ỵ': 'Y'
+    };
+
+    return str.replace(/[^A-Za-z0-9]/g, function (x) {
+      return map[x] || x;
+    });
+  }
 
   return (
+
     <div className="cart">
       <img className="avatar"
-      style={{border:'none', padding:'0'}}
+        style={{ border: 'none', padding: '0' }}
         src={aPost.author.urlAvatar === null ? logoPost : aPost.author.urlAvatar}
         alt=""
         onClick={() => { onClickImagePost(aPost.author.id) }} />
@@ -79,7 +139,7 @@ const SinglePost = ({ post }) => {
               <p>{aPost.salary !== null ? aPost.salary : ''}{aPost.currency}</p>
             </div>
             <div className="item">
-              <p>{aPost.location}</p>
+              <p>{removeVietnameseAccents(aPost.city.name)}</p>
             </div>
             <div className="item">
               <p>{getDaysDiff(aPost.createDate)} days ago</p>

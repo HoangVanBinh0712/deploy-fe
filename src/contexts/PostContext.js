@@ -46,7 +46,7 @@ const PostContextProvider = ({ children }) => {
     const getHotPost = async () => {
         try {
 
-            const responsePost = await axios.get(`${apiUrl}/post/hot-job?page=1&limit=18`, {
+            const responsePost = await axios.get(`${apiUrl}/post/hot-job?page=1&limit=48`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -69,7 +69,7 @@ const PostContextProvider = ({ children }) => {
     const getMostViewPost = async () => {
         try {
 
-            const responsePost = await axios.get(`${apiUrl}/post/most-view?type=YEAR&page=1&limit=18`, {
+            const responsePost = await axios.get(`${apiUrl}/post/most-view?type=YEAR&page=1&limit=48`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -116,7 +116,7 @@ const PostContextProvider = ({ children }) => {
     const getPredictPost = async (industryId) => {
         try {
             const recentToken = localStorage[LOCAL_STORAGE_TOKEN_NAME];
-            const responsePost = await axios.get(`${apiUrl}/user/cvpredict/post?industryId=${industryId}`, {
+            const responsePost = await axios.get(`${apiUrl}/user/cvpredict/post?industryId=${industryId}&limit=48`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${recentToken}`,
@@ -143,7 +143,7 @@ const PostContextProvider = ({ children }) => {
         getMostViewPost()
         getHotPost()
         if (user !== null) {
-            if (user.industry.id !== undefined && user.role === "ROLE_USER") {
+            if (user.industry !== null && user.role === "ROLE_USER") {
                 getPredictPost(user.industry.id)
             }
         }
@@ -161,6 +161,7 @@ const PostContextProvider = ({ children }) => {
 
                 },
             })
+            console.log(responsePost)
             if (responsePost.data.success) {
                 return responsePost.data
             }
@@ -386,13 +387,32 @@ const PostContextProvider = ({ children }) => {
         }
     }
 
+    const upDatePostDeleted = async (id) => {
+        try {
+            const recentToken = localStorage[LOCAL_STORAGE_TOKEN_NAME];
+            if (recentToken !== undefined) {
+                const response = await axios.put(`${apiUrl}/employer/post?postId=${id}&status=DELETED`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${recentToken}`,
+                    },
+                });
+                return response.data;
+            } else throw new Error("Unauthorized !");
+        }
+        catch (error) {
+            if (error.response.data) return error.response.data;
+            else return { success: false, message: error.message };
+        }
+    }
+
     //conxtext data
     const authPostData = {
         getPostById, getPostByIndustry,getPostByAnyFilter,
         getCvSubmited,
         followPost, unfollowPost,
         createPost, updatePost,
-        getEmpPost,
+        getEmpPost, upDatePostDeleted,
         getEmpStatiticsView,getEmpStatiticsSubmit,getEmpStatiticsTotalViewPost, 
         postState,
     };

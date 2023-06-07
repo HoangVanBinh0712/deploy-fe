@@ -1,25 +1,26 @@
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label } from 'recharts';
 import Title from './Title';
+import { useState, useEffect } from 'react';
 
 export default function Chart({ arr, type, title }) {
 
   const theme = useTheme();
 
-  // const dataDefault = [
-  //   { month: 'Jan', value: 0 },
-  //   { month: 'Feb', value: 0 },
-  //   { month: 'Mar', value: 0 },
-  //   { month: 'April', value: 0 },
-  //   { month: 'May', value: 0 },
-  //   { month: 'Jun', value: 0 },
-  //   { month: 'July', value: 0 },
-  //   { month: 'Aug', value: 0 },
-  //   { month: 'Sept', value: 0 },
-  //   { month: 'Oct', value: 0 },
-  //   { month: 'Nov', value: 0 },
-  //   { month: 'Dec', value: 0 },
-  // ];
+  const dataDefault = [
+    { month: 'Jan', value: 0 },
+    { month: 'Feb', value: 0 },
+    { month: 'Mar', value: 0 },
+    { month: 'April', value: 0 },
+    { month: 'May', value: 0 },
+    { month: 'Jun', value: 0 },
+    { month: 'July', value: 0 },
+    { month: 'Aug', value: 0 },
+    { month: 'Sept', value: 0 },
+    { month: 'Oct', value: 0 },
+    { month: 'Nov', value: 0 },
+    { month: 'Dec', value: 0 },
+  ];
 
   const formatData = (arr) => {
     const m = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
@@ -47,7 +48,7 @@ export default function Chart({ arr, type, title }) {
       {data.length > 0 ? (
         <div>
           <Title>{title}</Title>
-          <LineChart height={360} width={1200} data={data}
+          <LineChart height={360} width={1000} data={data}
             margin={{ top: 16, right: 16, bottom: 0, left: 24, }}
           >
             <XAxis

@@ -10,15 +10,25 @@ import userIcon from "../../assets/user.png";
 import { useRef } from "react";
 import Stomp from "stompjs";
 import { apiWS } from "../../contexts/Constants";
+import MeetingRoom from "./MeetingRoom";
+import WaitingRoom from "./WaitingRoom";
+import swal from "sweetalert";
 const ChatBox = () => {
   const {
     authState: { user, authLoading },
+    openRoomFromProfile,
+    setOpenRoomFromProfile,
   } = useContext(AuthContext);
 
   const userJwtToken = localStorage.getItem("user-token");
 
-  const [view, setView] = useState(true);
+  const [view, setView] = useState(false);
   const [listRoom, setListRoom] = useState([]);
+  const [gptOpen, setGptOpen] = useState(false);
+  const [gptMessage, setGptMessage] = useState([{ user: null, message: "How can i help you ?" }]);
+  const [gptInput, setGptInput] = useState("");
+  const [showMeetingRoom, setShowMeetingRoom] = useState(false);
+  const [meetingRoomId, setMeetingRoomId] = useState(null);
   /*
     Room of listroom
         const singleRoomChat = {
@@ -49,6 +59,9 @@ const ChatBox = () => {
       else ref.scrollTop = ref.scrollHeight;
     }
   };
+  const handleMessagesGPTRef = (ref) => {
+    if (ref) ref.scrollTop = ref.scrollHeight;
+  };
 
   const auth_headers = {
     Authorization: "Bearer " + userJwtToken,
@@ -63,6 +76,7 @@ const ChatBox = () => {
   useEffect(() => {
     listOpenRoomRef.current = listOpenRoom;
     listRoomRef.current = listRoom;
+    if (openRoomFromProfile) functionOpenRoom(openRoomFromProfile);
   }, [listOpenRoom, listRoom]);
 
   useEffect(() => {
@@ -126,7 +140,7 @@ const ChatBox = () => {
     return () => {
       stClient.disconnect();
     };
-  }, []);
+  }, [openRoomFromProfile]);
 
   function formatDateToYYYYMMDDHHMMSS(date) {
     const year = date.getFullYear();
@@ -171,9 +185,9 @@ const ChatBox = () => {
 
   function sendMessage(roomId) {
     const mess = getElementById(`${roomId}-input-message`);
-
+    console.log(mess, roomId);
     if (!mess.value.trim()) {
-      alert("Must type something !");
+      swal({ title: "Information", icon: "warning", text: "Must type something !" });
       return;
     }
     const stClient = Stomp.client(`ws://${apiWS}/chat`);
@@ -226,6 +240,7 @@ const ChatBox = () => {
 
   function keyUpMessage(e, roomId) {
     if (e.keyCode === 13) {
+      console.log(e.target.value);
       sendMessage(roomId);
     }
   }
@@ -295,6 +310,7 @@ const ChatBox = () => {
 
     //push a room to current room
     //Push recieverId to room
+    if (!room) return;
     const recieverName = getReciever(room).name;
     const url = fetchChatUrl + roomId + "/" + getReciever(room).id + "?page=1&limit=10";
     const chatContent = await loadMessage(url);
@@ -347,6 +363,7 @@ const ChatBox = () => {
     const data = chat_room.data.data;
     setMessengers(data);
     const roomIds = data.map((x) => x.id);
+    if (!roomIds || roomIds.length === 0) return;
     let query = "";
     for (let id of roomIds) {
       query += "roomIds=" + id + "&";
@@ -387,125 +404,306 @@ const ChatBox = () => {
       return room.user.urlAvatar;
     }
   };
+  const getRoomUserUrl = (roomId) => {
+    const room = filterListRoom(roomId, true)[0];
+    if (room) {
+      if (room.user.role === "ROLE_EMPLOYER") {
+        return "/recruiter/" + room.user.id;
+      } else if (room.user.role === "ROLE_USER") {
+        return "/employer/candidates/" + room.user.id;
+      }
+    }
+  };
 
   const isRoomOpened = (roomId) => {
     return listOpenRoom.some((x) => x.roomId === roomId);
   };
 
+  const sendMessageToChatGPT = async (message) => {
+    try {
+      const response = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          model: "gpt-3.5-turbo-0301",
+          messages: [{ role: "user", content: message }],
+          max_tokens: 300, // Adjust the desired response length
+          temperature: 0.7, // Adjust the creativity level (higher values = more random)
+          n: 1, // Number of responses to generate
+          stop: ["\n"], // Stop generating tokens after newline character
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer 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`,
+          },
+        }
+      );
+
+      return response.data.choices[0]?.message?.content;
+    } catch (error) {}
+  };
+
+  const onClickSendMessageGpt = async () => {
+    const lstMessamge = [...gptMessage, { user: true, message: gptInput }];
+    const message = gptInput;
+    setGptMessage(lstMessamge);
+    setGptInput("");
+    const mess = await sendMessageToChatGPT(message);
+    if (mess) {
+      setGptMessage([...lstMessamge, { user: null, message: mess }]);
+    } else {
+      setGptMessage([...lstMessamge, { user: null, message: "Sory ! You can try again later !" }]);
+    }
+  };
+  function detectURLs(string) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = string.match(urlRegex);
+    return urls ? urls : false;
+  }
+
   return (
-    <div className="float-items">
-      <div className="square-message">
-        {view && (
-          <div className="messages-info" id="messages-info">
-            <h4>Your chats !</h4>
-            <div className="messages" id="listRoom">
-              {listRoom.map((chat_room, index) => (
-                <div
-                  key={index}
-                  className={`room ${isRoomOpened(chat_room.room.id) ? "room-opened" : ""}`}
-                  id={`room-${chat_room.room.id}`}
-                  onClick={() => {
-                    functionOpenRoom(chat_room.room.id);
-                  }}
-                >
-                  <img className="avatar" src={chat_room.user.urlAvatar ? chat_room.user.urlAvatar : userIcon} width="50px" height="50px" alt="" />
-                  <div className="info">
-                    <p className="chat-header">
-                      {chat_room.user.id} - {chat_room.user.name}
-                    </p>
-                    <div className="unread-wrapper">
-                      <p id={`room-${chat_room.room.id}-message`} className={`unread-message  ${!chat_room.seen ? "unread" : ""}`}>
-                        <span id={`room-${chat_room.room.id}-time`}>{chat_room.unread}</span>
-                      </p>
-                      <p id={`room-${chat_room.room.id}-time`} className="unread-time">
-                        <span id={`room-${chat_room.room.id}-time`}>{chat_room.unread_time}</span>
-                      </p>
+    <>
+      {user && (
+        <>
+          {showMeetingRoom && <MeetingRoom roomId={meetingRoomId} setShowMeetingRoom={setShowMeetingRoom} setMeetingRoomId={setMeetingRoomId} />}
+          <div className="float-items">
+            <div className="square-message">
+              {view && (
+                <div className="messages-info" id="messages-info">
+                  <h4 className="header-box">
+                    Your chats !{" "}
+                    <div
+                      className="icon-meeting"
+                      onClick={() => {
+                        //Clicked open new chat
+                        function generateRandomString(length) {
+                          let result = "";
+                          const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                          const charactersLength = characters.length;
+
+                          for (let i = 0; i < length; i++) {
+                            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                          }
+
+                          return result;
+                        }
+                        const randomString = generateRandomString(10);
+
+                        window.open(`${process.env.REACT_APP_API_FE}/room/${randomString}`, "_blank");
+                      }}
+                    >
+                      {" "}
+                      <i className="fa fa-video-camera" style={{ fontSize: "2em" }} aria-hidden="true"></i>
+                    </div>{" "}
+                  </h4>
+                  <div className="messages" id="listRoom">
+                    <div
+                      className="room "
+                      id="room-gpt"
+                      onClick={() => {
+                        //Open chat GPT room
+                        setGptOpen(true);
+                      }}
+                    >
+                      <img
+                        className="avatar"
+                        src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhst4ldgBOg9rtbkICkI7VFyOe407LtYYCjVv0cfHh44OfJXH2V8huGuxGKV1Q0skZQiPiSrlAZjfpfRW1mQoOYMXc_M30p_eSarCnCCKF8ukhOMKoTCSiKIREJHCtsNfpzMAvZ5Lk83zOuk_21Au7LVzOwH5E0kPFPuV1bObJWc29Vp_IeeCJn0QDmew/s640/chat-gpt-logo.jpg"
+                        width="50px"
+                        height="50px"
+                        alt=""
+                      />
+                      <div className="info">
+                        <p className="chat-header">Chat GPT</p>
+                      </div>
+                    </div>
+
+                    {listRoom.map((chat_room, index) => (
+                      <div
+                        key={index}
+                        className={`room ${isRoomOpened(chat_room.room.id) ? "room-opened" : ""}`}
+                        id={`room-${chat_room.room.id}`}
+                        onClick={() => {
+                          functionOpenRoom(chat_room.room.id);
+                        }}
+                      >
+                        <img className="avatar" src={chat_room.user.urlAvatar ? chat_room.user.urlAvatar : userIcon} width="50px" height="50px" alt="" />
+                        <div className="info">
+                          <p className="chat-header">
+                            {chat_room.user.id} - {chat_room.user.name}
+                          </p>
+                          <div className="unread-wrapper">
+                            <p id={`room-${chat_room.room.id}-message`} className={`unread-message  ${!chat_room.seen ? "unread" : ""}`}>
+                              <span id={`room-${chat_room.room.id}-time`}>{chat_room.unread}</span>
+                            </p>
+                            <p id={`room-${chat_room.room.id}-time`} className="unread-time">
+                              <span id={`room-${chat_room.room.id}-time`}>{chat_room.unread_time}</span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div
+                className="circle-float"
+                id="circle-message"
+                onClick={() => {
+                  setView(!view);
+                }}
+              >
+                <i className="fa  fa-comments-o"></i>
+              </div>
+            </div>
+            <div id="messengers">
+              {gptOpen && (
+                <div className="chat-wrapper" id="chat-wrapper-gpt">
+                  <div className="chat-room" id="chat-room-gpt">
+                    <div className="chat-header" id="chat-room-gpt-header">
+                      <img
+                        className="avatar"
+                        src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhst4ldgBOg9rtbkICkI7VFyOe407LtYYCjVv0cfHh44OfJXH2V8huGuxGKV1Q0skZQiPiSrlAZjfpfRW1mQoOYMXc_M30p_eSarCnCCKF8ukhOMKoTCSiKIREJHCtsNfpzMAvZ5Lk83zOuk_21Au7LVzOwH5E0kPFPuV1bObJWc29Vp_IeeCJn0QDmew/s640/chat-gpt-logo.jpg"
+                        alt=""
+                      />
+                      <p id="chat-room-1-name">Chat GPT</p>
+                      <button
+                        className="chat-header-item"
+                        onClick={() => {
+                          setGptOpen(false);
+                          setGptInput("");
+                          setGptMessage([{ user: null, message: "How can i help you ?" }]);
+                        }}
+                      >
+                        X
+                      </button>
+                    </div>
+                    <div className="chat-content" id="table-gpt-container">
+                      <div className="table-chat" id="chat-room-gpt-table" ref={(ref) => handleMessagesGPTRef(ref)}>
+                        {gptMessage.map((m) => (
+                          <div className={`${m.user ? "yours" : ""}`}>
+                            <span>{m.message}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="chat-footer">
+                        <div className="item"></div>
+                        <div className="group-input">
+                          <input
+                            type="text"
+                            id="gpt-input-message"
+                            value={gptInput}
+                            onChange={(e) => {
+                              setGptInput(e.target.value);
+                            }}
+                            onKeyUp={(e) => {
+                              if (e.keyCode === 13)
+                                //enter
+                                onClickSendMessageGpt();
+                            }}
+                          />
+                          <button id="gpt-send" onClick={onClickSendMessageGpt}>
+                            <i className="fa fa-paper-plane-o"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {listOpenRoom.map((table, index) => (
+                <div key={index} className="chat-wrapper" id={`chat-wrapper-${table.roomId}`}>
+                  <div className="chat-room" id={`chat-room-${table.roomId}`}>
+                    <div className="chat-header" id={`chat-room-${table.roomId}-header`}>
+                      <img
+                        className="avatar"
+                        src={getRoomImage(table.roomId) ? getRoomImage(table.roomId) : userIcon}
+                        alt=""
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = userIcon;
+                        }}
+                        onClick={() => {
+                          //open user profile
+                          const url = getRoomUserUrl(table.roomId);
+                          if (url) {
+                            window.open(`${process.env.REACT_APP_API_FE}${url}`);
+                          }
+                        }}
+                      />
+                      <div
+                        className="chat-header-item"
+                        onClick={() => {
+                          setMeetingRoomId(table.roomId?.toString());
+                          setShowMeetingRoom(true);
+                        }}
+                      >
+                        <i className="fa fa-phone" aria-hidden="true"></i>
+                      </div>
+                      <p id="chat-room-1-name">{table.recieverName}</p>
+                      <button
+                        className="chat-header-item"
+                        onClick={() => {
+                          closeRoom(table.roomId);
+                        }}
+                      >
+                        X
+                      </button>
+                    </div>
+                    <div className="chat-content" id={`table-${table.roomId}-container`}>
+                      <div
+                        className="table-chat"
+                        id={`chat-room-${table.roomId}-table`}
+                        onScroll={(e) => {
+                          onTableScroll(e, table.roomId, table.chatContent[0]?.id);
+                        }}
+                        ref={(ref) => handleMessagesRef(ref, table.chatContent.length)}
+                      >
+                        {table.chatContent.map((c, index) => {
+                          return (
+                            <div key={index} className={`${c.senderId === user.id ? "yours" : ""}`}>
+                              {detectURLs(c.content) ? (
+                                <span>
+                                  <a href={detectURLs(c.content)} target="_blank">
+                                    {c.content}
+                                  </a>{" "}
+                                </span>
+                              ) : (
+                                <span>{c.content}</span>
+                              )}
+                              <div className="hidden-time">{c.time.toString()}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="chat-footer">
+                        <div className="item"></div>
+                        <div className="group-input">
+                          <input
+                            type="text"
+                            id={`${table.roomId}-input-message`}
+                            onKeyUp={(event) => {
+                              keyUpMessage(event, table.roomId);
+                            }}
+                          />
+                          <button
+                            id={`${table.roomId}-send`}
+                            onClick={() => {
+                              sendMessage(table.roomId);
+                            }}
+                          >
+                            <i className="fa fa-paper-plane-o"></i>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        )}
-        <div
-          className="circle-float"
-          id="circle-message"
-          onClick={() => {
-            setView(!view);
-          }}
-        >
-          <i className="fa  fa-comments-o"></i>
-        </div>
-      </div>
-      <div id="messengers">
-        {listOpenRoom.map((table, index) => (
-          <div key={index} className="chat-wrapper" id={`chat-wrapper-${table.roomId}`}>
-            <div className="chat-room" id={`chat-room-${table.roomId}`}>
-              <div className="chat-header" id={`chat-room-${table.roomId}-header`}>
-                <img
-                  className="avatar"
-                  src={getRoomImage(table.roomId) ? getRoomImage(table.roomId) : userIcon}
-                  alt=""
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = userIcon;
-                  }}
-                />
-                <p id="chat-room-1-name">{table.recieverName}</p>
-                <button
-                  onClick={() => {
-                    closeRoom(table.roomId);
-                  }}
-                >
-                  X
-                </button>
-              </div>
-              <div className="chat-content" id={`table-${table.roomId}-container`}>
-                <div
-                  className="table-chat"
-                  id={`chat-room-${table.roomId}-table`}
-                  onScroll={(e) => {
-                    onTableScroll(e, table.roomId, table.chatContent[0]?.id);
-                  }}
-                  ref={(ref) => handleMessagesRef(ref, table.chatContent.length)}
-                >
-                  {table.chatContent.map((c, index) => {
-                    return (
-                      <div key={index} className={`${c.senderId === user.id ? "yours" : ""}`}>
-                        <span>{c.content}</span>
-                        <div className="hidden-time">{c.time.toString()}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="chat-footer">
-                  <div className="item">
-                    <i className="fa fa-file-image-o" aria-hidden="true"></i>
-                  </div>
-                  <div className="group-input">
-                    <input
-                      type="text"
-                      id={`${table.roomId}-input-message`}
-                      onKeyUp={(event) => {
-                        keyUpMessage(event, table.roomId);
-                      }}
-                    />
-                    <button
-                      id={`${table.roomId}-send`}
-                      onClick={() => {
-                        sendMessage(table.roomId);
-                      }}
-                    >
-                      <i className="fa fa-paper-plane-o"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+        </>
+      )}
+    </>
   );
 };
 export default ChatBox;

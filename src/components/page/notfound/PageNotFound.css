@@ -74,7 +74,7 @@
     font-size: 1.5em;
     margin-bottom: 1.2em;
     text-transform: uppercase;
-    color: #000;
+    color: #fff;
     font-size: 2em;
     position: relative;
 }
@@ -92,7 +92,7 @@
 
 .content p {
     font-size: 1.2em;
-    color: #0d0d0d;
+    /* color: #0d0d0d; */
 }
 
 .content .btns {

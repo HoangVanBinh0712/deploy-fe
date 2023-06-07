@@ -31,7 +31,6 @@ const StatiticsPage = () => {
 
     const getStaSubmitData = async() => {
         const res = await getEmpStatiticsSubmit(currentYear)
-        console.log(res.data)
         if(res.status ===200){
             setStatitcsSubmitData(res.data)
         }
@@ -39,7 +38,6 @@ const StatiticsPage = () => {
 
     const getStaViewPageData = async() => {
         const res = await  getEmpStatiticsView(currentYear)
-        console.log(res.data)
         if(res.status ===200){
             setStatitcsViewPageData(res.data)
         }
@@ -47,7 +45,6 @@ const StatiticsPage = () => {
 
     const getStaPostData = async() => {
         const res = await  getEmpStatiticsTotalViewPost(currentYear)
-        console.log(res.data)
         if(res.status ===200){
             setStatitcsPostData(res.data)
         } 
@@ -94,7 +91,7 @@ const StatiticsPage = () => {
                     </div>
                     <div className='title-group-overal group-manager-post button' onClick={() => { onClickPost() }}>
                         <div>
-                            <p>Post Statistics</p>
+                            <p>View Post</p>
                         </div>
                     </div>
                     <div className='title-group-overal group-manager-post button' onClick={() => {  onClickView() }}>
@@ -110,7 +107,7 @@ const StatiticsPage = () => {
                 </div>
                 <div className='gr-chart' style={isPostSta?{display:'block'}:{display:'none'}} >
                     <div className='chart-frame-statitics'>
-                        <LineChart arr={statiticsPostData} title={`Number of posts per month in ${currentYear}`} />
+                        <LineChart arr={statiticsPostData} title={`Number of post's views  per month in ${currentYear}`} />
                     </div>
                     <div style={{display:'flex', justifyContent:'center'}}>Statistical chart of the number views of posts by month.</div>
                 </div>

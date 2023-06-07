@@ -13,7 +13,7 @@ const PageNotFound = () => {
           something is broken, report a problem.
         </p>
         <div className="btns">
-          <a href="/user/home">return home</a>
+          <a href="/home">return home</a>
           <a href="https://www.facebook.com/vanbinh0712">report problem</a>
         </div>
       </div>

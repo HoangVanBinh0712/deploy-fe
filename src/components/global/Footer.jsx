@@ -30,7 +30,7 @@ const Footer = () => {
                                 <p>Thành Phố Hồ Chí Minh</p>
                             </div>
                             <div className="thoa-thuan">
-                                Thoả thuận người dùng.
+                               
                             </div>
                         </div>
                     </div>

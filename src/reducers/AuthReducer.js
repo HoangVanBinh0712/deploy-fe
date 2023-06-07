@@ -13,7 +13,7 @@ export const AuthReducer = (state, action) => {
         case 'REMOVE_AUTH':
             return {
                 ...state,
-                authloading: true,
+                authloading: false,
                 isAuthenticated,
                 user,
                 role,

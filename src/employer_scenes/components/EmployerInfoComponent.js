@@ -2,15 +2,15 @@ import { useContext, useEffect, useState, useRef } from "react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import logoIcon from "../../assets/picture-banner/logo.png";
+import WaitingResponeButton from "../../components/WaitingResponeButton";
 import { AuthContext } from "../../contexts/AuthContext";
 import { GlobalContext } from "../../contexts/GlobalContext";
-import { useToast } from "../../contexts/Toast";
+import swal from "sweetalert";
 
 const EmployerInfo = () => {
 
-  const { authState: { user }, getUser, updateEmpInfo } = useContext(AuthContext)
+  const { authState: { user }, getUser, updateEmpInfo, setUser } = useContext(AuthContext)
   const { globalState: { cities, industries } } = useContext(GlobalContext)
-  const { warn, success } = useToast();
 
   const [userInfo, setUserinfor] = useState({
     email: user !== null ? user.email : "",
@@ -23,6 +23,10 @@ const EmployerInfo = () => {
     urlAvatar: user !== null ? user.urlAvatar : null,
   })
   const { email, name, phone, address, cityId, industryId, urlCover, urlAvatar } = userInfo
+  const [isUpdate, setIsUpdate] = useState(false)
+  const [isWaitingRes, setIsWaitingRes] = useState(false)
+
+
 
   const [desc, setDesc] = useState('');
   const handleDescChange = (newValue) => {
@@ -122,14 +126,27 @@ const EmployerInfo = () => {
   };
 
   const onUpdateUserClick = async (event) => {
+    setIsWaitingRes(true)
     try {
-      const infoData = { email, name, phone, address, cityId, industryId, description:desc }
-      const reponseData = await updateEmpInfo(infoData, avatar, cover)
-      if (reponseData.success) {
-        success('Update information successfully!')
+      const infoData = { email, name, phone, address, cityId, industryId, description: desc }
+      const responseData = await updateEmpInfo(infoData, avatar, cover)
+      if (responseData.success) {
+        swal({
+          title: "Success",
+          icon: "success",
+          text: "Updated information Successfully!",
+          dangerMode: false,
+        })
+        setUser(responseData.data)
+        setIsUpdate(false)
       }
       else {
-        warn(reponseData.message)
+        swal({
+          title: "Error",
+          icon: "warning",
+          text: responseData.message,
+          dangerMode: true,
+        })
       }
 
     }
@@ -138,13 +155,59 @@ const EmployerInfo = () => {
         return error.response.data;
       } else return { success: false, message: error.message };
     }
+    setIsWaitingRes(false)
+    setIsUpdate(false)
   }
 
   const onCancelClick = () => {
-    const confirm = window.confirm("Are you sure you want to cancel, the information you changed will not be saved?");
-    if (confirm) {
-      getUserInfo()
-    }
+    swal({
+      title: "Are you sure you want to cancel?",
+      icon: "info",
+      text: "The information you changed will not be saved",
+      buttons: {
+        cancel: "No, cancel",
+        confirm: "Yes, proceed"
+      },
+    }).then((click) => {
+      if (click) {
+        getUserInfo();
+        setIsUpdate(false)
+      }
+    });
+  }
+  const removeVietnameseAccents = (str) => {
+    const map = {
+      'à': 'a', 'á': 'a', 'ả': 'a', 'ã': 'a', 'ạ': 'a',
+      'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ẳ': 'a', 'ẵ': 'a', 'ặ': 'a',
+      'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ẩ': 'a', 'ẫ': 'a', 'ậ': 'a',
+      'đ': 'd',
+      'è': 'e', 'é': 'e', 'ẻ': 'e', 'ẽ': 'e', 'ẹ': 'e',
+      'ê': 'e', 'ề': 'e', 'ế': 'e', 'ể': 'e', 'ễ': 'e', 'ệ': 'e',
+      'ì': 'i', 'í': 'i', 'ỉ': 'i', 'ĩ': 'i', 'ị': 'i',
+      'ò': 'o', 'ó': 'o', 'ỏ': 'o', 'õ': 'o', 'ọ': 'o',
+      'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ổ': 'o', 'ỗ': 'o', 'ộ': 'o',
+      'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ở': 'o', 'ỡ': 'o', 'ợ': 'o',
+      'ù': 'u', 'ú': 'u', 'ủ': 'u', 'ũ': 'u', 'ụ': 'u',
+      'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ử': 'u', 'ữ': 'u', 'ự': 'u',
+      'ỳ': 'y', 'ý': 'y', 'ỷ': 'y', 'ỹ': 'y', 'ỵ': 'y',
+      'À': 'A', 'Á': 'A', 'Ả': 'A', 'Ã': 'A', 'Ạ': 'A',
+      'Ă': 'A', 'Ằ': 'A', 'Ắ': 'A', 'Ẳ': 'A', 'Ẵ': 'A', 'Ặ': 'A',
+      'Â': 'A', 'Ầ': 'A', 'Ấ': 'A', 'Ẩ': 'A', 'Ẫ': 'A', 'Ậ': 'A',
+      'Đ': 'D',
+      'È': 'E', 'É': 'E', 'Ẻ': 'E', 'Ẽ': 'E', 'Ẹ': 'E',
+      'Ê': 'E', 'Ề': 'E', 'Ế': 'E', 'Ể': 'E', 'Ễ': 'E', 'Ệ': 'E',
+      'Ì': 'I', 'Í': 'I', 'Ỉ': 'I', 'Ĩ': 'I', 'Ị': 'I',
+      'Ò': 'O', 'Ó': 'O', 'Ỏ': 'O', 'Õ': 'O', 'Ọ': 'O',
+      'Ô': 'O', 'Ồ': 'O', 'Ố': 'O', 'Ổ': 'O', 'Ỗ': 'O', 'Ộ': 'O',
+      'Ơ': 'O', 'Ờ': 'O', 'Ớ': 'O', 'Ở': 'O', 'Ỡ': 'O', 'Ợ': 'O',
+      'Ù': 'U', 'Ú': 'U', 'Ủ': 'U', 'Ũ': 'U', 'Ụ': 'U',
+      'Ư': 'U', 'Ừ': 'U', 'Ứ': 'U', 'Ử': 'U', 'Ữ': 'U', 'Ự': 'U',
+      'Ỳ': 'Y', 'Ý': 'Y', 'Ỷ': 'Y', 'Ỹ': 'Y', 'Ỵ': 'Y'
+    };
+
+    return str.replace(/[^A-Za-z0-9]/g, function (x) {
+      return map[x] || x;
+    });
   }
 
   let body
@@ -162,6 +225,7 @@ const EmployerInfo = () => {
               Upload image
               <input
                 ref={fileCoverInput}
+                disabled={!isUpdate}
                 id="file-upload"
                 type="file"
                 accept=".jpg,.jpeg,.png"
@@ -181,6 +245,7 @@ const EmployerInfo = () => {
                 Upload image
                 <input
                   ref={fileAvtInput}
+                  disabled={!isUpdate}
                   id="file-upload"
                   type="file"
                   accept=".jpg,.jpeg,.png"
@@ -202,31 +267,31 @@ const EmployerInfo = () => {
             </div>
             <div className="input-wrapper">
               <div className="label">Name</div>
-              <input type="text" name="name" value={name} onChange={onChangeUserInfo}></input>
+              <input type="text" name="name" value={name} disabled={!isUpdate} onChange={onChangeUserInfo}></input>
             </div>
           </div>
           <div className="row">
             <div className="input-wrapper">
               <div className="label">Phone</div>
-              <input type="text" name="phone" value={phone} onChange={onChangeUserInfo}></input>
+              <input type="text" name="phone" value={phone} disabled={!isUpdate} onChange={onChangeUserInfo}></input>
             </div>
             <div className="input-wrapper">
               <div className="label">Address</div>
-              <input type="text" name="address" value={address} onChange={onChangeUserInfo}></input>
+              <input type="text" name="address" value={address} disabled={!isUpdate} onChange={onChangeUserInfo}></input>
             </div>
           </div>
           <div className="text-area-group">
             <div className="label">Description</div>
-            <ReactQuill value={desc} onChange={handleDescChange} style={{}} />
+            <ReactQuill value={desc} onChange={handleDescChange} readOnly={!isUpdate} style={{}} />
           </div>
           <div className="double-select">
             <div className="select">
               <div className="label">Location</div>
-              <select name="city" id="" onChange={onChangeUserInfo}>
+              <select name="cityId" id="" disabled={!isUpdate} onChange={onChangeUserInfo}>
                 {cities.lenght !== 0 ?
                   (cities.map((c) => (
                     <option key={c.id} value={c.id} selected={cityId === c.id}>
-                      {c.name}
+                      {removeVietnameseAccents(c.name)}
                     </option>
                   )))
                   : (<>
@@ -242,7 +307,7 @@ const EmployerInfo = () => {
             </div>
             <div className="select">
               <div className="label">Industry</div>
-              <select name="industry" id="" onChange={onChangeUserInfo}>
+              <select name="industryId" id="" disabled={!isUpdate} onChange={onChangeUserInfo}>
                 {industries.lenght !== 0 ?
                   (industries.map((c) => (
                     <option key={c.id} value={c.id} selected={industryId === c.id}>
@@ -262,14 +327,30 @@ const EmployerInfo = () => {
             </div>
           </div>
           <div className="group-buttons">
-            <div className="button" onClick={onUpdateUserClick}>
-              <i className="fa fa-floppy-o" aria-hidden="true"></i>
-              Confirm
-            </div>
-            <div className="button cancel" onClick={onCancelClick}>
-              <i className="fa fa-times" aria-hidden="true"></i>
-              Cancel
-            </div>
+            {isUpdate ? (<>
+              {isWaitingRes ? (
+                <div className="button-waiting">
+                <WaitingResponeButton />
+                </div>
+              ) : (
+                <div className="button" onClick={onUpdateUserClick}>
+                  <i className="fa fa-floppy-o" aria-hidden="true"></i>
+                  Confirm
+                </div>
+              )}
+
+              <div className="button cancel" onClick={onCancelClick}>
+                <i className="fa fa-times" aria-hidden="true"></i>
+                Cancel
+              </div>
+            </>
+            ) : (
+              <div className="button al-content-btn" onClick={() => setIsUpdate(true)}>
+                <i className="fa fa-file-text-o" aria-hidden="true" ></i>
+                Edit
+              </div>
+            )}
+
           </div>
         </div>
       </div>

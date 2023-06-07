@@ -1,30 +1,48 @@
 import leftArrow from "../../assets/icons/left-arow-icon.png"
 import rightArrow from "../../assets/icons/right-arow-grey-icon.png"
 import SinglePost from "./SinglePostComponent";
+import WaitingResponeButton from "../../components/WaitingResponeButton";
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import { useToast } from '../../contexts/Toast';
+import swal from "sweetalert";
+import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../../contexts/GlobalContext";
 
 const PredictJob = () => {
 
   const { getResume, predictResume, } = useContext(AuthContext)
-  const { warn, success } = useToast();
+  const { globalState: { industries } } = useContext(GlobalContext)
 
   const [allResume, setAllResume] = useState([])
   const [currentResumeId, setCurrentResumeId] = useState(-1)
   const [resumePre, SetResumePredict] = useState([])
   const [listPostPre, setListPostPre] = useState([])
   const [listIndustryPre, setlistIndustryPre] = useState([])
+  const [isWaitingRes, setIsWaitingRes] = useState(false)
+
+  const navigate = useNavigate()
 
   const predictCV = async (cvId) => {
+    setIsWaitingRes(true)
     const res = await predictResume(cvId)
     if (res.success) {
       SetResumePredict(res.predictResult)
       setListPostPre(res.data);
       setlistIndustryPre(Object.keys(res.predictResult))
-      success("Successfully! Now you can see your predictions for this CV.")
+      swal({
+        title: "Success",
+        icon: "success",
+        text: "Successfully! Now you can see your predictions for this CV.",
+        dangerMode: false,
+      })
     }
-    else warn(res.message)
+    else swal({
+      title: "Error",
+      icon: "warning",
+      text: res.message,
+      dangerMode: true,
+    })
+    setIsWaitingRes(false)
   }
 
   const getAllResume = async () => {
@@ -76,11 +94,22 @@ const PredictJob = () => {
     predictCV(currentResumeId)
   }
 
+  const toPageSearch = (indusName) => {
+    const indus = industries.find(item => item.name.toLowerCase() === indusName)
+    if (indus !== undefined) navigate(`/posts?industryId=${indus.id}`)
+    else swal({
+      title: "Error",
+      icon: "warning",
+      text: 'This industry not found!',
+      dangerMode: true,
+    })
+  }
+
   let postInResultBox
   if (listPostPre.length > 0) {
     postInResultBox = (<>
       {allPost[currentPage].map((p, id) => (
-        <SinglePost post={p} key={id} />
+        <SinglePost post={p} key={id} mediaId={currentResumeId} />
       ))
       }
     </>
@@ -105,18 +134,25 @@ const PredictJob = () => {
             <div className="row-flex">
               <select className="select-resume"
                 defaultValue="-1" name="" id=""
-                style={{ padding: "1em" }}
+                style={{ padding: "0.5em" }}
                 onChange={onChangeSelectResume}>
                 {allResume.length === 0 ?
                   (<option value="-1">You have not uploaded any profile yet</option>)
                   : (allResume.map((r, id) => (<option value={r.mediaId} key={id}>{r.name}</option>)))}
 
               </select>
-              <div className="group-buttons">
-                <div className="button" onClick={predictClick}>
-                  <i className="fa fa-list" aria-hidden="true"></i>
-                  Predict
-                </div>
+              <div className="group-buttons" style={{ height: '40px', width: '100px' }}>
+                {isWaitingRes ? (
+                  <div className="button-waiting">
+                    <WaitingResponeButton />
+                  </div>
+                ) : (
+                  <div className="button" onClick={predictClick}>
+                    <i className="fa fa-list" aria-hidden="true"></i>
+                    Predict
+                  </div>
+                )}
+
               </div>
             </div>
           </div>
@@ -128,8 +164,8 @@ const PredictJob = () => {
                 {allResume.length === 0 ? (<a className="link-to-upload-nohave" href="/user/account/add-resume" style={{ textDecoration: 'none', color: "#0c62ad" }}>UpLoad Now</a>) : ("")}
               </div>) : (listIndustryPre.map((r, id) => (
                 <div className="single-result" style={{ width: "32%" }} key={id}>
-                  <div className="pipe">
-                    <div className="value text-in-value-bar" style={{ width: `${resumePre[r]}` }}>{r}</div>
+                  <div className="pipe" onClick={() => toPageSearch(r)} style={{ cursor: 'pointer' }}>
+                    <div className="value text-in-value-bar" style={{ width: `${resumePre[r]}`/* , color: "red" */ }}>{r}</div>
                   </div>
                   <div className="value-text">{resumePre[r]}</div>
                 </div>)

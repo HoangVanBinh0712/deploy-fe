@@ -508,3 +508,11 @@
     border: 1px solid #6c6c6c !important;
     color: #6c6c6c !important;
 }
+
+.count-view-post {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #6c6c6c;
+    padding-left: 2px;
+}

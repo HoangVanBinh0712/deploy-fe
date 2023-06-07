@@ -1,139 +1,119 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useToast } from "../../contexts/Toast";
+import swal from "sweetalert";
 
 const ChangePassword = () => {
-    const { changePassword } = useContext(AuthContext)
-    const { warn, success } = useToast();
+  const { changPassword, logoutSection } = useContext(AuthContext);
 
-    const [oldPassword, setOldPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+  // const [oldPassword, setOldPassword] = useState('')
+  // const [newPassword, setNewPassword] = useState('')
+  // const [confirmPassword, setConfirmPassword] = useState('')
+  const [formData, setFormData] = useState({ oldPassword: "", newPassword: "", confirmPassword: "" });
+  const [formErrors, setFormErrors] = useState({});
+  const { oldPassword, newPassword, confirmPassword } = formData;
 
-    const onChangOldPassword = (event) => {
-        setOldPassword(event.target.value)
-    }
-    const onChangNewPassword = (event) => {
-        setNewPassword(event.target.value)
-    }
-    const onChangConfirmPassword = (event) => {
-        setConfirmPassword(event.target.value)
-    }
+  const validate = () => {
+    const errors = {};
+    //email, password
+    if (!newPassword) errors.newPassword = "Password is required";
+    else if (newPassword?.length < 6) errors.newPassword = "Password must at least 6 characters !";
+    else if (newPassword !== confirmPassword) errors.confirmPassword = "Confirm password not match !";
 
-    const [showPassword, setShowPassword] = useState(false);
-    const onClickShow = () => {
-        setShowPassword(!showPassword);
-    };
+    if (!oldPassword) errors.oldPassword = "Password is required";
+    else if (oldPassword?.length < 6) errors.oldPassword = "Password must at least 6 characters !";
 
-    const validatePassword = (oldPassword, password1, password2) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
-        const check1 = regex.test(password1)
-        if (password1 !== password2) {
-            return { success: false, message: "The password you entered does not match." }
-        }
-        else if (oldPassword === password1) {
-            return { success: false, message: "The new password cannot be the same as the old password!" }
-        }
-        else if (!check1) {
-            return { success: false, message: "Your password must contain at least 8 characters including at least one lowercase letter, uppercase letter, number and special character." }
-        }
-        return { success: true, message: "Checked" }
-    }
+    if (!confirmPassword) errors.confirmPassword = "Password is required";
+    else if (confirmPassword?.length < 6) errors.confirmPassword = "Password must at least 6 characters !";
 
-    const [mess, setMess] = useState('')
+    return errors;
+  };
 
-    const onClickSave = async () => {
-        if (oldPassword.length === 0 || newPassword.length === 0 || confirmPassword.length === 0) {
-            setMess("*Required...")
-            setTimeout(() => {
-                setMess("")
-            }, 5000)
-        }
-        else {
-            const checkPassword = validatePassword(oldPassword, newPassword, confirmPassword)
-            if (!checkPassword.success) {
-                warn(checkPassword.message)
+  const onFormChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+  const onClickShow = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const [mess, setMess] = useState("");
+
+  const onClickSave = async () => {
+    const err = validate();
+    console.log(err);
+    if (Object.keys(err).length > 0) {
+      setFormErrors(err);
+    } else {
+      setFormErrors({});
+
+      swal({
+        title: "Information",
+        icon: "info",
+        text: "Are you sure to update your password ?",
+      }).then(async (click) => {
+        if (click) {
+          const res = await changPassword(formData);
+          swal({
+            title: res.success ? "Success" : "Error",
+            icon: res.success ? "success" : "error",
+            text: res.message,
+          }).then(c=>{
+            if(c && res.success){
+                logoutSection()
             }
-            else {
-                const confirm = window.confirm("Are you sure you want to change your password?");
-                const pw = {
-                    oldPassword: oldPassword,
-                    newPassword: newPassword,
-                    confirmPassword: confirmPassword
-                }
-                if (confirm) {
-                    const res = await changePassword(pw);
-                    if (res.success) {
-                        success('Changed password successfully!')
-                    }
-                    else {
-                        warn(res.message)
-                    }
-                }
-            }
+          });
         }
-
+      });
     }
-    return (
-        <>
-            <div style={{ width: "80%" }}>
-                <div className="component-title">
-                    <span>Change password</span>
-                </div>
-                <div className="free-space" id="free-space">
-                    <div className="content-wrapper">
-
-                        <div className="input-wrapper ">
-                            <div className="label">Old Password</div>
-                            <input className="coler-placeholder" type={showPassword ? "text" : "password"}
-                                name="oldPassword"
-                                onChange={onChangOldPassword}
-                                placeholder={mess}>
-
-                            </input>
-                        </div>
-
-                        <div className="input-wrapper">
-                            <div className="label">New Password</div>
-                            <input className="coler-placeholder" type={showPassword ? "text" : "password"}
-                                name="newPassword"
-                                onChange={onChangNewPassword}
-                                placeholder={mess}>
-
-                            </input>
-                        </div>
-                        <div className="input-wrapper">
-                            <div className="label">Confirm password</div>
-                            <input className="coler-placeholder" type={showPassword ? "text" : "password"}
-                                name="confirmPassword"
-                                onChange={onChangConfirmPassword}
-                                placeholder={mess}>
-
-                            </input>
-                        </div>
-                        <div className="group-buttons checkbox-show-password">
-                            <div style={{ width: "250px" }}>
-                                <label className="checkbox-showpass">
-                                    <input
-                                        type="checkbox"
-                                        checked={showPassword}
-                                        onChange={onClickShow}
-                                    />
-                                    Show password
-                                </label>
-                            </div>
-                            <div className="button" onClick={onClickSave}>
-
-                                <i className="fa fa-floppy-o" aria-hidden="true"></i>
-
-                                Confirm
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  };
+  return (
+    <>
+      <div style={{ width: "80%" }}>
+        <div className="component-title">
+          <span>Change password</span>
+        </div>
+        <div className="free-space" id="free-space">
+          <div className="content-wrapper">
+            <div className="input-wrapper ">
+              <div className="label">Old Password</div>
+              <input className="coler-placeholder" type={showPassword ? "text" : "password"} name="oldPassword" value={oldPassword} onChange={onFormChange} placeholder={mess}></input>
+              <label className="label-error-message" htmlFor="email">
+                {formErrors?.oldPassword}
+              </label>
             </div>
-        </>
-    )
-}
+
+            <div className="input-wrapper">
+              <div className="label">New Password</div>
+              <input className="coler-placeholder" type={showPassword ? "text" : "password"} name="newPassword" value={newPassword} onChange={onFormChange} placeholder={mess}></input>
+              <label className="label-error-message" htmlFor="email">
+                {formErrors?.newPassword}
+              </label>
+            </div>
+            <div className="input-wrapper">
+              <div className="label">Confirm password</div>
+              <input className="coler-placeholder" type={showPassword ? "text" : "password"} name="confirmPassword" value={confirmPassword} onChange={onFormChange} placeholder={mess}></input>
+              <label className="label-error-message" htmlFor="email">
+                {formErrors?.confirmPassword}
+              </label>
+            </div>
+            <div className="group-buttons checkbox-show-password">
+              <div style={{ width: "250px" }}>
+                <label className="checkbox-showpass">
+                  <input type="checkbox" checked={showPassword} onChange={onClickShow} />
+                  Show password
+                </label>
+              </div>
+              <div className="button" onClick={onClickSave}>
+                <i className="fa fa-floppy-o" aria-hidden="true"></i>
+                Confirm
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default ChangePassword;
