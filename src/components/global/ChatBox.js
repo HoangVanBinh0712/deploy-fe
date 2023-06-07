@@ -80,7 +80,7 @@ const ChatBox = () => {
   }, [listOpenRoom, listRoom]);
 
   useEffect(() => {
-    const stClient = Stomp.client(`ws://${apiWS}/chat`);
+    const stClient = Stomp.client(`wss://${apiWS}/chat`);
     if (!authLoading && user) {
       keyUpJwt(userJwtToken);
 
@@ -190,7 +190,7 @@ const ChatBox = () => {
       swal({ title: "Information", icon: "warning", text: "Must type something !" });
       return;
     }
-    const stClient = Stomp.client(`ws://${apiWS}/chat`);
+    const stClient = Stomp.client(`wss://${apiWS}/chat`);
     stClient.connect(auth_headers, async () => {
       const time = new Date();
       await stClient.send(
